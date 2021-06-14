@@ -29,6 +29,13 @@ class InMemoryMessageRepositoryTest {
     }
 
     @Test
+    void saveDuplicate() {
+        Message message = new Message().setId(ID1).setContent("content");
+        repository.save(message);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> repository.save(message));
+    }
+
+    @Test
     void update() {
         Message message = new Message().setId(ID1).setContent("content");
         repository.save(message);

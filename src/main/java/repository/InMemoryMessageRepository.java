@@ -18,7 +18,10 @@ class InMemoryMessageRepository implements IMessageRepository {
             message.setCreatedAt(ZonedDateTime.now());
         }
         message.setLastModifiedAt(ZonedDateTime.now());
-        database.put(message.getId(), message);
+        boolean idUsed = database.putIfAbsent(message.getId(), message) != null;
+        if (idUsed) {
+            throw new IllegalArgumentException("Duplicate id " + message.getId());
+        }
     }
 
     @Override
