@@ -4,6 +4,7 @@ import model.Message;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 class InMemoryMessageRepository implements IMessageRepository {
     private final Map<UUID, Message> database = new LinkedHashMap<>();
@@ -40,7 +41,14 @@ class InMemoryMessageRepository implements IMessageRepository {
     }
 
     @Override
-    public List<Message> selectAll() {
-        return new ArrayList<>(database.values());
+    public Optional<Message> selectOne(UUID id) {
+        return Optional.ofNullable(database.get(id));
+    }
+
+    @Override
+    public List<Message> selectChildren(UUID parentId) {
+        return database.values().stream()
+                .filter(message -> Objects.equals(parentId, message.getParentId()))
+                .collect(Collectors.toList());
     }
 }

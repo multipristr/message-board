@@ -10,8 +10,8 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 class InMemoryMessageRepositoryTest {
-    private final UUID id1 = UUID.randomUUID();
-    private final UUID id2 = UUID.randomUUID();
+    private final static UUID ID1 = UUID.randomUUID();
+    private final static UUID ID2 = UUID.randomUUID();
     private InMemoryMessageRepository repository;
 
     @BeforeEach
@@ -21,50 +21,61 @@ class InMemoryMessageRepositoryTest {
 
     @Test
     void save() {
-        Message message = new Message().setId(id1).setContent("content");
+        Message message = new Message().setId(ID1).setContent("content");
         repository.save(message);
-        Message savedMessage = repository.selectAll().get(0);
-        Assertions.assertEquals(id1, savedMessage.getId());
+        Message savedMessage = repository.selectOne(ID1).get();
+        Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("content", savedMessage.getContent());
     }
 
     @Test
     void update() {
-        Message message = new Message().setId(id1).setContent("content");
+        Message message = new Message().setId(ID1).setContent("content");
         repository.save(message);
-        repository.update(id1, "new content");
-        Message savedMessage = repository.selectAll().get(0);
-        Assertions.assertEquals(id1, savedMessage.getId());
+        repository.update(ID1, "new content");
+        Message savedMessage = repository.selectOne(ID1).get();
+        Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("new content", savedMessage.getContent());
     }
 
     @Test
     void updateNonExistent() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> repository.update(id2, "new content"));
+        Assertions.assertThrows(NoSuchElementException.class, () -> repository.update(ID2, "new content"));
     }
 
     @Test
     void delete() {
-        Message message = new Message().setId(id1).setContent("content");
+        Message message = new Message().setId(ID1).setContent("content");
         repository.save(message);
         repository.delete(message.getId());
-        Assertions.assertTrue(repository.selectAll().isEmpty());
+        Assertions.assertFalse(repository.selectOne(ID1).isPresent());
     }
 
     @Test
     void deleteNonExistent() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> repository.delete(id2));
+        Assertions.assertThrows(NoSuchElementException.class, () -> repository.delete(ID2));
     }
 
     @Test
-    void selectAll() {
-        Message message = new Message().setId(id1).setContent("content");
+    void selectTopLevel() {
+        Message message = new Message().setId(ID1).setContent("content");
         repository.save(message);
-        Message message2 = new Message().setId(id2).setContent("content2");
+        Message message2 = new Message().setId(ID2).setContent("content2");
         repository.save(message2);
-        List<Message> messages = repository.selectAll();
+        List<Message> messages = repository.selectTopLevel();
         Assertions.assertEquals(2, messages.size());
-        Assertions.assertEquals(id1, messages.get(0).getId());
-        Assertions.assertEquals(id2, messages.get(1).getId());
+        Assertions.assertEquals(ID1, messages.get(0).getId());
+        Assertions.assertEquals(ID2, messages.get(1).getId());
+    }
+
+    @Test
+    void selectChildren() {
+        Message message = new Message().setId(ID1).setContent("content");
+        repository.save(message);
+        Message message2 = new Message().setId(ID2).setContent("content2").setParentId(message.getId());
+        repository.save(message2);
+        List<Message> messages = repository.selectChildren(message.getId());
+        Assertions.assertEquals(1, messages.size());
+        Assertions.assertEquals(ID2, messages.get(0).getId());
     }
 }

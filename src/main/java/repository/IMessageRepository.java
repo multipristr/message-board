@@ -3,6 +3,7 @@ package repository;
 import model.Message;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface IMessageRepository {
@@ -12,5 +13,11 @@ public interface IMessageRepository {
 
     void delete(UUID id);
 
-    List<Message> selectAll();
+    Optional<Message> selectOne(UUID id);
+
+    default List<Message> selectTopLevel() {
+        return selectChildren(null);
+    }
+
+    List<Message> selectChildren(UUID parentId);
 }
