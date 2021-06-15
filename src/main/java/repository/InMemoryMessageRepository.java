@@ -10,7 +10,7 @@ class InMemoryMessageRepository implements IMessageRepository {
     private final Map<UUID, Message> database = new LinkedHashMap<>();
 
     @Override
-    public void save(Message message) {
+    public void saveMessage(Message message) {
         if (message.getId() == null) {
             message.setId(UUID.randomUUID());
         }
@@ -20,36 +20,28 @@ class InMemoryMessageRepository implements IMessageRepository {
         message.setLastModifiedAt(ZonedDateTime.now());
         boolean idUsed = database.putIfAbsent(message.getId(), message) != null;
         if (idUsed) {
-            throw new IllegalArgumentException("Duplicate id " + message.getId());
+            throw new IllegalArgumentException("Duplicate message id " + message.getId());
         }
     }
 
     @Override
-    public void update(UUID id, String content) {
-        Message message = database.get(id);
-        if (message == null) {
-            throw new NoSuchElementException("No message with id " + id);
-        }
-        message.setContent(content);
+    public void updateMessage(Message message) {
         message.setLastModifiedAt(ZonedDateTime.now());
-        database.put(id, message);
+        database.put(message.getId(), message);
     }
 
     @Override
-    public void delete(UUID id) {
-        boolean messageNotFound = database.remove(id) == null;
-        if (messageNotFound) {
-            throw new NoSuchElementException("No message with id " + id);
-        }
+    public void deleteMessage(UUID id) {
+        database.remove(id);
     }
 
     @Override
-    public Optional<Message> selectOne(UUID id) {
+    public Optional<Message> selectOneMessage(UUID id) {
         return Optional.ofNullable(database.get(id));
     }
 
     @Override
-    public List<Message> selectChildren(UUID parentId) {
+    public List<Message> selectChildMessages(UUID parentId) {
         return database.values().stream()
                 .filter(message -> Objects.equals(parentId, message.getParentId()))
                 .collect(Collectors.toList());

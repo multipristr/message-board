@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 class InMemoryMessageRepositoryTest {
@@ -22,8 +21,8 @@ class InMemoryMessageRepositoryTest {
     @Test
     void save() {
         Message message = new Message().setId(ID1).setContent("content");
-        repository.save(message);
-        Message savedMessage = repository.selectOne(ID1).get();
+        repository.saveMessage(message);
+        Message savedMessage = repository.selectOneMessage(ID1).get();
         Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("content", savedMessage.getContent());
     }
@@ -31,45 +30,36 @@ class InMemoryMessageRepositoryTest {
     @Test
     void saveDuplicate() {
         Message message = new Message().setId(ID1).setContent("content");
-        repository.save(message);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> repository.save(message));
+        repository.saveMessage(message);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> repository.saveMessage(message));
     }
 
     @Test
     void update() {
         Message message = new Message().setId(ID1).setContent("content");
-        repository.save(message);
-        repository.update(ID1, "new content");
-        Message savedMessage = repository.selectOne(ID1).get();
+        repository.saveMessage(message);
+        message.setContent("new content");
+        repository.updateMessage(message);
+        Message savedMessage = repository.selectOneMessage(ID1).get();
         Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("new content", savedMessage.getContent());
     }
 
     @Test
-    void updateNonExistent() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> repository.update(ID2, "new content"));
-    }
-
-    @Test
     void delete() {
         Message message = new Message().setId(ID1).setContent("content");
-        repository.save(message);
-        repository.delete(message.getId());
-        Assertions.assertFalse(repository.selectOne(ID1).isPresent());
-    }
-
-    @Test
-    void deleteNonExistent() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> repository.delete(ID2));
+        repository.saveMessage(message);
+        repository.deleteMessage(message.getId());
+        Assertions.assertFalse(repository.selectOneMessage(ID1).isPresent());
     }
 
     @Test
     void selectTopLevel() {
         Message message = new Message().setId(ID1).setContent("content");
-        repository.save(message);
+        repository.saveMessage(message);
         Message message2 = new Message().setId(ID2).setContent("content2");
-        repository.save(message2);
-        List<Message> messages = repository.selectTopLevel();
+        repository.saveMessage(message2);
+        List<Message> messages = repository.selectTopLevelMessages();
         Assertions.assertEquals(2, messages.size());
         Assertions.assertEquals(ID1, messages.get(0).getId());
         Assertions.assertEquals(ID2, messages.get(1).getId());
@@ -78,10 +68,10 @@ class InMemoryMessageRepositoryTest {
     @Test
     void selectChildren() {
         Message message = new Message().setId(ID1).setContent("content");
-        repository.save(message);
+        repository.saveMessage(message);
         Message message2 = new Message().setId(ID2).setContent("content2").setParentId(message.getId());
-        repository.save(message2);
-        List<Message> messages = repository.selectChildren(message.getId());
+        repository.saveMessage(message2);
+        List<Message> messages = repository.selectChildMessages(message.getId());
         Assertions.assertEquals(1, messages.size());
         Assertions.assertEquals(ID2, messages.get(0).getId());
     }

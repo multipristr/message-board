@@ -7,17 +7,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IMessageRepository {
-    void save(Message message);
+    void saveMessage(Message message);
 
-    void update(UUID id, String content);
+    void updateMessage(Message message);
 
-    void delete(UUID id);
+    void deleteMessage(UUID id);
 
-    Optional<Message> selectOne(UUID id);
+    Optional<Message> selectOneMessage(UUID id);
 
-    default List<Message> selectTopLevel() {
-        return selectChildren(null);
+    default List<Message> selectTopLevelMessages() {
+        return selectChildMessages(null);
     }
 
-    List<Message> selectChildren(UUID parentId);
+    List<Message> selectChildMessages(UUID parentId);
 }
