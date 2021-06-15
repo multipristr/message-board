@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IMessageRepository {
-    void saveMessage(Message message);
+    UUID saveMessage(Message message);
 
     void updateMessage(Message message);
 

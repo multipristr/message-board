@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IMessageService {
-    void createMessage(String content, UUID parentId);
+    UUID createMessage(String content, UUID parentId);
 
     void modifyMessageContent(UUID id, String content);
 

@@ -1,16 +1,26 @@
 package model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+@ApiModel
 public class Message implements Serializable {
     private static final long serialVersionUID = -5208261623943103835L;
+    @ApiModelProperty(required = true)
     private UUID id;
+    @ApiModelProperty
     private UUID parentId;
+    @ApiModelProperty(value = "Date time of message creation", required = true)
     private ZonedDateTime createdAt;
+    @ApiModelProperty(value = "Message owner", required = true)
     private String author;
+    @ApiModelProperty(value = "Date time of the latest modification", required = true)
     private ZonedDateTime lastModifiedAt;
+    @ApiModelProperty(value = "Message text", required = true)
     private String content;
 
     public UUID getId() {
@@ -65,9 +75,5 @@ public class Message implements Serializable {
     public Message setContent(String content) {
         this.content = content;
         return this;
-    }
-
-    public boolean isInvalid() {
-        return content == null || content.trim().isEmpty();
     }
 }

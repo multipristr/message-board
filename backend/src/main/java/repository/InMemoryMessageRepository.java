@@ -1,16 +1,18 @@
 package repository;
 
 import model.Message;
+import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class InMemoryMessageRepository implements IMessageRepository {
+@Repository
+public class InMemoryMessageRepository implements IMessageRepository {
     private final Map<UUID, Message> database = new LinkedHashMap<>();
 
     @Override
-    public void saveMessage(Message message) {
+    public UUID saveMessage(Message message) {
         if (message.getId() == null) {
             message.setId(UUID.randomUUID());
         }
@@ -22,6 +24,7 @@ class InMemoryMessageRepository implements IMessageRepository {
         if (idUsed) {
             throw new IllegalArgumentException("Duplicate message id " + message.getId());
         }
+        return message.getId();
     }
 
     @Override

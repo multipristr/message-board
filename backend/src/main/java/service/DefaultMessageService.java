@@ -1,6 +1,8 @@
 package service;
 
 import model.Message;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import repository.IMessageRepository;
 
 import java.util.List;
@@ -8,18 +10,20 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
-class MessageService implements IMessageService {
+@Service
+public class DefaultMessageService implements IMessageService {
     private final IMessageRepository repository;
 
-    public MessageService(IMessageRepository repository) {
+    @Autowired
+    public DefaultMessageService(IMessageRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public void createMessage(String content, UUID parentId) {
+    public UUID createMessage(String content, UUID parentId) {
         String author = ""; // TODO FIXME Get author from security
         Message message = new Message().setContent(content).setParentId(parentId);
-        repository.saveMessage(message);
+        return repository.saveMessage(message);
     }
 
     @Override

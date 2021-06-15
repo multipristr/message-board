@@ -12,10 +12,11 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-security")
+    /*implementation("org.springframework.boot:spring-boot-starter-security")*/
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.google.inject:guice:5.0.1")
+    implementation("io.springfox:springfox-swagger-ui:3.0.0")
+    implementation("io.springfox:springfox-swagger2:3.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
