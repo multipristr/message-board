@@ -2,6 +2,9 @@ package service;
 
 import model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import repository.IMessageRepository;
@@ -18,10 +21,15 @@ public class DefaultMessageService implements IMessageService {
     @Autowired
     public DefaultMessageService(IMessageRepository repository) {
         this.repository = repository;
+        repository.saveMessage(new Message().setAuthor("user").setContent("content").setParentId(UUID.randomUUID())); // TODO FIXME remove
+        repository.saveMessage(new Message().setAuthor("user2").setContent("content2"));
     }
 
     private String getCurrentUser() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        return Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .map(Authentication::getName)
+                .orElseThrow(() -> new BadCredentialsException("Not logged in"));
     }
 
     @Override

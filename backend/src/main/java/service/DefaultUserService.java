@@ -15,7 +15,7 @@ public class DefaultUserService implements IUserService {
     public DefaultUserService(PasswordEncoder encoder, IUserRepository repository) {
         this.encoder = encoder;
         this.repository = repository;
-        repository.saveUser(new User().setLogin("user").setPassword(encoder.encode("password"))); // TODO FIXME remove
+        registerUser(new User().setLogin("user").setPassword("password")); // TODO FIXME remove
     }
 
     @Override
