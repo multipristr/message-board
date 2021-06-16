@@ -29,9 +29,6 @@ public class RestMessageController {
     @ApiResponses(@ApiResponse(code = 201, message = "Successfully created message"))
     @PostMapping(value = "/message", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UUID> createMessage(@RequestBody String content, @RequestParam(required = false) UUID parentId) {
-        if (content == null || content.trim().isEmpty()) {
-            throw new IllegalArgumentException("Empty message content");
-        }
         UUID id = service.createMessage(content, parentId);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
@@ -44,9 +41,6 @@ public class RestMessageController {
     @ApiResponses(@ApiResponse(code = 204, message = "Successfully modified message"))
     @PutMapping(value = "/message/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> modifyMessageContent(@PathVariable UUID id, @RequestBody String newContent) {
-        if (newContent == null || newContent.trim().isEmpty()) {
-            throw new IllegalArgumentException("Empty content for message " + id);
-        }
         service.modifyMessageContent(id, newContent);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

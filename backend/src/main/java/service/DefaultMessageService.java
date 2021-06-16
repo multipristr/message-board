@@ -21,13 +21,18 @@ public class DefaultMessageService implements IMessageService {
 
     @Override
     public UUID createMessage(String content, UUID parentId) {
-        String author = ""; // TODO FIXME Get author from security
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Empty message content");
+        }
         Message message = new Message().setContent(content).setParentId(parentId);
         return repository.saveMessage(message);
     }
 
     @Override
     public void modifyMessageContent(UUID id, String content) {
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Empty new modified message content in " + id);
+        }
         String author = ""; // TODO FIXME Get author from security
         Optional<Message> savedMessage = repository.selectOneMessage(id);
         if (!savedMessage.isPresent()) {
