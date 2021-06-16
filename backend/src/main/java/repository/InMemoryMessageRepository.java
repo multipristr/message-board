@@ -22,7 +22,7 @@ public class InMemoryMessageRepository implements IMessageRepository {
         message.setLastModifiedAt(ZonedDateTime.now());
         boolean idUsed = database.putIfAbsent(message.getId(), message) != null;
         if (idUsed) {
-            throw new IllegalArgumentException("Duplicate message id " + message.getId());
+            throw new IllegalStateException("Duplicate message id " + message.getId());
         }
         return message.getId();
     }

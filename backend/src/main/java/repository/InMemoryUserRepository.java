@@ -15,7 +15,7 @@ public class InMemoryUserRepository implements IUserRepository {
     public void saveUser(User user) {
         boolean userExists = database.putIfAbsent(user.getLogin(), user) != null;
         if (userExists) {
-            throw new IllegalArgumentException("Duplicate user " + user.getLogin());
+            throw new IllegalStateException("Duplicate user " + user.getLogin());
         }
     }
 

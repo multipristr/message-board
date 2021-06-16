@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.IUserRepository;
 
+import java.util.Collections;
+
 @Service
 public class DefaultAuthenticationProvider implements AuthenticationProvider {
     private final IUserRepository userRepository;
@@ -25,14 +27,14 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String login = authentication.getPrincipal().toString();
+        String login = authentication.getName();
         String dbPassword = userRepository.selectPassword(login).orElseThrow(() -> new BadCredentialsException("Invalid user " + login));
         String requestPassword = (String) authentication.getCredentials();
         if (requestPassword == null || !passwordEncoder.matches(requestPassword, dbPassword)) {
             throw new BadCredentialsException("Invalid password for user " + login);
         }
 
-        Authentication token = new UsernamePasswordAuthenticationToken(login, dbPassword);
+        Authentication token = new UsernamePasswordAuthenticationToken(login, dbPassword, Collections.emptyList());
         SecurityContextHolder.setContext(new SecurityContextImpl(token));
 
         return token;
