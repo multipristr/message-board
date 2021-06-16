@@ -18,7 +18,7 @@ import springfox.documentation.spring.web.plugins.Docket;
         DataSourceTransactionManagerAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class
 })
-@ComponentScan(basePackages = {"controller", "service", "repository"})
+@ComponentScan(basePackages = {"controller", "service", "repository", "config"})
 public class SpringBootMainClass {
 
     public static void main(String[] args) {
