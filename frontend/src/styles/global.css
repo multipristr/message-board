@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins');
+
+html, body, #___gatsby {
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    background-size: 100%;
+    font-family: "Poppins", "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+    /* Font varient */
+    font-variant-ligatures: none;
+    font-size: 1.7vmin;
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    /* Smoothing */
+    text-rendering: optimizeLegibility;
+    text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
+    background-color: darkgray;
+}
