@@ -1,4 +1,7 @@
 import * as React from "react"
+import MessageList from "./MessageList";
+import * as ReactDOM from "react-dom";
+import * as ReactDOMServer from "react-dom/server";
 
 const messageStyle = {
     display: "grid",
@@ -7,15 +10,23 @@ const messageStyle = {
     margin: "0.2%",
 }
 
-const Message = ({author, createdAt, modifiedAt, content, level}) => {
+const repliesStyle = {
+    display: "grid",
+}
+
+const replyStyle = {
+    display: "grid",
+}
+
+const Message = ({id, author, createdAt, lastModifiedAt, content, level, addReplies}) => {
     const style = level ? {marginLeft: `${level}%`, ...messageStyle} : messageStyle
     return (
-        <div style={style}>
-            <header>{author} Created: <time>{createdAt}</time> {modifiedAt && <>Modified:
-                + <time>{modifiedAt}</time></>}</header>
+        <div style={style} id={id}>
+            <header>{author} Created: <time>{createdAt}</time> {lastModifiedAt && <>Modified:
+                <time>{lastModifiedAt}</time></>}</header>
             <p>{content}</p>
-            <button>Show replies</button>
-            <button>Reply</button>
+            <button style={repliesStyle} onClick={() => addReplies(id, level + 1)}>Show replies</button>
+            <button style={replyStyle}>Reply</button>
         </div>
     )
 }
