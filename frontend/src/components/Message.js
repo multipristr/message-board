@@ -14,9 +14,13 @@ const headStyle = {
 const Message = ({id, author, createdAt, lastModifiedAt, content, addReplies}) => {
     return (
         <div style={messageStyle} id={id}>
-            <div style={headStyle}>
-                {author}&nbsp;Created: <time>{new Date(createdAt).toLocaleString()}</time>&nbsp;
-                {lastModifiedAt !== createdAt && <>Modified: <time>{new Date(lastModifiedAt).toLocaleString()}</time></>}
+            <div>
+                <text style={headStyle}>
+                    {author}&nbsp;Created: <time>{new Date(createdAt).toLocaleString()}</time>&nbsp;
+                    {lastModifiedAt !== createdAt && <>Modified: <time>{new Date(lastModifiedAt).toLocaleString()}</time>&nbsp;</>}
+                </text>
+                <button>Modify</button>
+                <button>Delete</button>
             </div>
             <p>{content}</p>
             <div>

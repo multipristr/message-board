@@ -8,7 +8,6 @@ html, body, #___gatsby {
     font-family: "Poppins", "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
     /* Font varient */
     font-variant-ligatures: none;
-    font-size: 1.7vmin;
     word-break: break-word;
     white-space: pre-wrap;
     overflow-wrap: break-word;
