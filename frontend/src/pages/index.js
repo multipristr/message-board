@@ -7,7 +7,7 @@ const IndexPage =  () => {
     return (
         <main>
             <title>Message board</title>
-            <MessageList level={0}/>
+            <MessageList level={-1}/>
             <AddMessage/>
         </main>
     )
