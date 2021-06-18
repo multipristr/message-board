@@ -25,7 +25,11 @@ public class DefaultMessageService implements IMessageService {
         repository.saveMessage(new Message().setAuthor("user2").setContent("content2"));
         UUID parentId = UUID.randomUUID();
         repository.saveMessage(new Message().setAuthor("user3").setContent("content3").setId(parentId));
-        repository.saveMessage(new Message().setAuthor("user3").setContent("content4").setParentId(parentId));
+        UUID id2 = UUID.randomUUID();
+        repository.saveMessage(new Message().setAuthor("user5").setContent("content4").setParentId(parentId).setId(id2));
+        repository.saveMessage(new Message().setAuthor("user6").setContent("content6").setParentId(id2));
+        repository.saveMessage(new Message().setAuthor("user4").setContent("content5").setParentId(parentId));
+        repository.saveMessage(new Message().setAuthor("user7").setContent("content7"));
     }
 
     private String getCurrentUser() {

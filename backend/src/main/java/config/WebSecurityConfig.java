@@ -35,7 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().sameOrigin()
                 .and().authenticationProvider(authenticationProvider).httpBasic()
-                .and().formLogin().loginProcessingUrl("/login").usernameParameter("login").passwordParameter("password");
+                .and().formLogin().loginProcessingUrl("/login").usernameParameter("login").passwordParameter("password")
+                .and().sessionManagement().maximumSessions(1);
         http.cors();
     }
 
