@@ -36,6 +36,9 @@ public class InMemoryMessageRepository implements IMessageRepository {
     @Override
     public void deleteMessage(UUID id) {
         database.remove(id);
+        database.values().stream()
+                .filter(message -> id.equals(message.getParentId()))
+                .forEach(message -> deleteMessage(message.getId()));
     }
 
     @Override
