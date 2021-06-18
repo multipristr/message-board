@@ -1,10 +1,9 @@
 import * as React from "react"
+import {useRef} from "react"
 import {SERVER_URL} from "../config";
 
 const areaStyle = {
     display: "grid",
-    backgroundColor: "black",
-    color: "white",
     margin: "0.2%",
 }
 
@@ -25,12 +24,14 @@ const createMessage = (parentId, content) => {
 
 
 const AddMessage = ({style, parentId, afterReply}) => {
+    const ref = useRef(null);
+
     const addStyle = style ? {...areaStyle, ...style} : areaStyle
     return (
         <div style={addStyle}>
-            <textarea/>
+            <textarea ref={ref} rows={4} id="`content`" placeholder="New message ..." autoFocus required/>
             <button onClick={() =>
-                createMessage(parentId, "content")
+                createMessage(parentId, ref.current.value)
                     .then(() => afterReply())
             }>
                 Post
