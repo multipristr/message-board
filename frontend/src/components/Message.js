@@ -71,7 +71,7 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message${id}`, {
     body: JSON.stringify(content),
 })
 
-const Message = ({id, author, createdAt, lastModifiedAt, content, addReplies}) => {
+const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies}) => {
     return (
         <div style={messageStyle}>
             <div style={headStyle}>
@@ -94,7 +94,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, addReplies}) =
                 </button>
             </div>
             <p style={contentStyle}>{content}</p>
-            <button style={repliesStyle} onClick={() => addReplies(id)}>Show replies</button>
+            <button style={repliesStyle} onClick={() => operateReplies(id)}>{show ? "Show" : "Hide"} replies</button>
             <button style={replyStyle}>Reply</button>
         </div>
     )

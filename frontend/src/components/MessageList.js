@@ -4,6 +4,7 @@ import Message from "./Message";
 
 const MessageList = ({message, parentId, level}) => {
     const [messages, setMessages] = useState([]);
+    const [show, setShow] = useState(true);
 
     const fetchMessages = useCallback((parentId) => {
         let url = `${SERVER_URL}/messages`
@@ -19,11 +20,18 @@ const MessageList = ({message, parentId, level}) => {
         })
             .then(response => response.json())
             .then(data => setMessages(data))
+            .then(() => setShow(false))
     }, [])
+
+    const hideMessages = () => {
+        setMessages([])
+        setShow(true)
+    }
 
     useEffect(() => {
         if (!message && messages.length <= 0) {
             fetchMessages(parentId)
+            setShow(true)
         }
     }, [message, messages, fetchMessages, parentId]);
 
@@ -31,7 +39,8 @@ const MessageList = ({message, parentId, level}) => {
         <div style={{paddingLeft: `${level}%`}}>
             {message &&
             <Message
-                addReplies={fetchMessages}
+                operateReplies={show ? fetchMessages : hideMessages}
+                show={show}
                 id={message.id}
                 key={message.id}
                 author={message.author}
