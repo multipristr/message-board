@@ -2,6 +2,7 @@ import * as React from "react"
 import {SERVER_URL} from "../config";
 
 const areaStyle = {
+    display: "grid",
     backgroundColor: "black",
     color: "white",
     margin: "0.2%",
@@ -23,13 +24,14 @@ const createMessage = (parentId, content) => {
 }
 
 
-const AddMessage = ({parentId}) => {
+const AddMessage = ({style, parentId, afterReply}) => {
+    const addStyle = style ? {...areaStyle, ...style} : areaStyle
     return (
-        <div style={areaStyle}>
+        <div style={addStyle}>
             <textarea/>
             <button onClick={() =>
                 createMessage(parentId, "content")
-                    .then(() => "") // TODO FIXME Reload messages
+                    .then(() => afterReply())
             }>
                 Post
             </button>
