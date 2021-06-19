@@ -75,17 +75,20 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
     const contentRef = useRef(null)
     const [modifying, setModifying] = useState(false)
+    const [modifiedTimestamp, setModifiedTimeStamp] = useState(lastModifiedAt)
 
     return (
         <div style={messageStyle}>
             <div style={headStyle}>
                 {author}&nbsp;Created: <time>{new Date(createdAt).toLocaleString()}</time>&nbsp;
-                {lastModifiedAt !== createdAt && <>Modified: <time>{new Date(lastModifiedAt).toLocaleString()}</time>&nbsp;</>}
+                {modifiedTimestamp !== createdAt && <>Modified: <time>{new Date(modifiedTimestamp).toLocaleString()}</time>&nbsp;</>}
             </div>
             <div style={buttonsStyle}>
                 <button onClick={() => {
                     if (modifying) {
                         modifyMessage(id, contentRef.current.value)
+                            .then(response => response.json())
+                            .then(timestamp => setModifiedTimeStamp(timestamp))
                     } else {
                         contentRef.current.focus()
                     }
