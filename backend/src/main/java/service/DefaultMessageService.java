@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import repository.IMessageRepository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class DefaultMessageService implements IMessageService {
     }
 
     @Override
-    public void modifyMessageContent(UUID id, String content) {
+    public ZonedDateTime modifyMessageContent(UUID id, String content) {
         if (content == null || content.trim().isEmpty()) {
             throw new IllegalArgumentException("Empty new modified message content in " + id);
         }
@@ -63,7 +64,7 @@ public class DefaultMessageService implements IMessageService {
             throw new SecurityException("User '" + currentUser + "' can't modify message " + id);
         }
         modifiedMessage.setContent(content);
-        repository.updateMessage(modifiedMessage);
+        return repository.updateMessage(modifiedMessage);
     }
 
     @Override

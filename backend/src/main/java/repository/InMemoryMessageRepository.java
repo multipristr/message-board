@@ -28,9 +28,10 @@ public class InMemoryMessageRepository implements IMessageRepository {
     }
 
     @Override
-    public void updateMessage(Message message) {
+    public ZonedDateTime updateMessage(Message message) {
         message.setLastModifiedAt(ZonedDateTime.now());
         database.put(message.getId(), message);
+        return message.getLastModifiedAt();
     }
 
     @Override

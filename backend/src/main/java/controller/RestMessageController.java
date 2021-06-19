@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.IMessageService;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,10 +27,9 @@ public class RestMessageController {
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/message/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> modifyMessageContent(@PathVariable UUID id, @RequestBody String newContent) {
-        service.modifyMessageContent(id, newContent);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping(value = "/message/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ZonedDateTime modifyMessageContent(@PathVariable UUID id, @RequestBody String newContent) {
+        return service.modifyMessageContent(id, newContent);
     }
 
     @DeleteMapping("/message/{id}")
