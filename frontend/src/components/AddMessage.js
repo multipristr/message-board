@@ -23,13 +23,13 @@ const createMessage = (parentId, content) => {
 }
 
 
-const AddMessage = ({style, parentId, afterReply}) => {
+const AddMessage = ({level, parentId, afterReply}) => {
     const ref = useRef(null);
 
-    const addStyle = style ? {...areaStyle, ...style} : areaStyle
+    const addStyle = level > 0 ? {...areaStyle, marginLeft: `${level}%`} : areaStyle
     return (
         <div style={addStyle}>
-            <textarea ref={ref} rows={4} id="`content`" placeholder="New message ..." autoFocus required/>
+            <textarea ref={ref} rows={4} id="`content`" placeholder="New message ..." required/>
             <button onClick={() =>
                 createMessage(parentId, ref.current.value)
                     .then(() => afterReply())
