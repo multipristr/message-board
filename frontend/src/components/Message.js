@@ -86,13 +86,14 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             <div style={buttonsStyle}>
                 <button onClick={() => {
                     if (modifying) {
-                        modifyMessage(id, contentRef.current.value)// TODO FIXME Content value, update on success
+                        modifyMessage(id, contentRef.current.innerHTML)
                             .then(response => response.json())
                             .then(timestamp => setModifiedTimeStamp(timestamp))
+                            .then(() => setModifying(false))
                     } else {
+                        setModifying(true)
                         contentRef.current.focus()
                     }
-                    setModifying(!modifying)
                 }}>
                     {modifying ? "Save changes" : "Modify"}
                 </button>
