@@ -67,9 +67,9 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
     method: 'PUT',
     credentials: 'include',
     headers: {
-        contentType: "application/json",
+        "Content-Type": "application/json",
     },
-    body: JSON.stringify(content),
+    body: content,
 })
 
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
@@ -86,7 +86,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             <div style={buttonsStyle}>
                 <button onClick={() => {
                     if (modifying) {
-                        modifyMessage(id, contentRef.current.value)
+                        modifyMessage(id, contentRef.current.value)// TODO FIXME Content value, update on success
                             .then(response => response.json())
                             .then(timestamp => setModifiedTimeStamp(timestamp))
                     } else {
@@ -97,7 +97,12 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                     {modifying ? "Save changes" : "Modify"}
                 </button>
                 <button onClick={() => deleteMessage(id)
-                    .then(() => deleteHierarchy)
+                    .then(response => {
+                            if (response.status === 204) {
+                                deleteHierarchy()
+                            }
+                        }
+                    )
                 }>
                     Delete
                 </button>

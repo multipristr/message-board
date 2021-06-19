@@ -16,9 +16,9 @@ const createMessage = (parentId, content) => {
         method: 'POST',
         credentials: 'include',
         headers: {
-            contentType: "application/json",
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(content),
+        body: content,
     })
 }
 
@@ -29,9 +29,10 @@ const AddMessage = ({level, parentId, afterReply}) => {
     const addStyle = level > 0 ? {...areaStyle, marginLeft: `${level}%`} : areaStyle
     return (
         <div style={addStyle}>
-            <textarea ref={ref} rows={4} id="`content`" placeholder="New message ..." required/>
+            <textarea ref={ref} rows={4} placeholder="New message ..." required/>
             <button onClick={() =>
                 createMessage(parentId, ref.current.value)
+                    .then(() => ref.current.value = "")
                     .then(() => afterReply())
             }>
                 Post
