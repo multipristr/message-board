@@ -12,13 +12,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private AuthenticationProvider authenticationProvider;
 
@@ -30,14 +32,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/login", "/user*").permitAll()
+        http.cors()
+                .and().authorizeRequests()
+                .antMatchers("/user**").permitAll()
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().sameOrigin()
-                .and().authenticationProvider(authenticationProvider).httpBasic()
-                .and().formLogin().loginProcessingUrl("/login").usernameParameter("login").passwordParameter("password")
+                .and().authenticationProvider(authenticationProvider)
+                .httpBasic()
+                //.formLogin().loginProcessingUrl("/login").usernameParameter("login").passwordParameter("password")
+                //.successHandler(new RefererAuthenticationSuccessHandler())
                 .and().sessionManagement().maximumSessions(1);
-        http.cors();
     }
 
     @Override
@@ -66,4 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
+    }
 }

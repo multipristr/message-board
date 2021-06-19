@@ -72,7 +72,7 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
     body: JSON.stringify(content),
 })
 
-const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply}) => {
+const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
     const contentRef = useRef(null)
     const [modifying, setModifying] = useState(false)
 
@@ -84,18 +84,17 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             </div>
             <div style={buttonsStyle}>
                 <button onClick={() => {
-                    setModifying(!modifying)
                     if (modifying) {
                         modifyMessage(id, contentRef.current.value)
-                            .then(() => "")// TODO FIXME Reload message list
                     } else {
                         contentRef.current.focus()
                     }
+                    setModifying(!modifying)
                 }}>
                     {modifying ? "Save changes" : "Modify"}
                 </button>
                 <button onClick={() => deleteMessage(id)
-                    .then(() => "") // TODO FIXME Reload message list
+                    .then(() => deleteHierarchy)
                 }>
                     Delete
                 </button>

@@ -3,7 +3,7 @@ import {SERVER_URL} from "../config";
 import Message from "./Message";
 import AddMessage from "./AddMessage";
 
-const MessageList = ({message, parentId, level}) => {
+const MessageList = ({message, level, deleteHierarchy}) => {
     const [messages, setMessages] = useState([]);
     const [show, setShow] = useState(true);
     const [replying, setReplying] = useState(false);
@@ -27,10 +27,10 @@ const MessageList = ({message, parentId, level}) => {
 
     useEffect(() => {
         if (!message && messages.length <= 0) {
-            fetchMessages(parentId)
+            fetchMessages()
             setShow(true)
         }
-    }, [message, messages, fetchMessages, parentId]);
+    }, [message, messages, fetchMessages]);
 
     const hideMessages = () => {
         setMessages([])
@@ -50,6 +50,7 @@ const MessageList = ({message, parentId, level}) => {
                     operateReplies={show ? fetchMessages : hideMessages}
                     show={show}
                     addReply={() => setReplying(true)}
+                    deleteHierarchy={deleteHierarchy}
                     id={message.id}
                     author={message.author}
                     createdAt={message.createdAt}
@@ -62,6 +63,7 @@ const MessageList = ({message, parentId, level}) => {
                 <MessageList
                     message={message}
                     level={level + 1}
+                    deleteHierarchy={() => setMessages(messages.filter(mes => mes.id !== message.id))}
                     key={message.id}
                 />
             ))}
