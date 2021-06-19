@@ -1,7 +1,9 @@
-FROM gradle:7.0.2-jdk8 AS build
-COPY --chown=gradle:gradle . /home/gradle/src
+# syntax=docker/dockerfile:experimental
+FROM openjdk:8-jdk-alpine AS build
 WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+
+COPY . /home/gradle/src
+RUN --mount=type=cache,target=/root/.gradle ./gradlew clean build --parallel --configure-on-demand --watch-fs --daemon -Dorg.gradle.daemon.idletimeout=3600000 -Dorg.gradle.jvmargs=-Duser.language=en -Duser.region=US -Dfile.encoding=UTF-8 --no-build-cache --refresh-dependencies
 
 FROM openjdk:8-jre-slim
 
