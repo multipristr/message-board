@@ -17,7 +17,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
             method: 'GET',
             credentials: 'include',
             headers: {
-                accept: "application/json",
+                "Accept": "application/json",
             }
         })
             .then(response => response.json())

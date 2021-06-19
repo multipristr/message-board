@@ -33,8 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().headers().frameOptions().sameOrigin()
                 .and().csrf().disable()
                 .authenticationProvider(authenticationProvider).httpBasic()
-                .and().sessionManagement().maximumSessions(1)
-        ;
+                .and().sessionManagement().maximumSessions(1);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:8000")
                 .allowCredentials(true)
-                .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
 }

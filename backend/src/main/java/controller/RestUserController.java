@@ -19,7 +19,7 @@ public class RestUserController {
         this.service = service;
     }
 
-    @PostMapping(value = "/user", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> registerUser(@RequestBody User user) {
         service.registerUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);

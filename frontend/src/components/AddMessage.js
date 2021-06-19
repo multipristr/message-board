@@ -4,7 +4,7 @@ import {SERVER_URL} from "../config";
 
 const areaStyle = {
     display: "grid",
-    margin: "0.2%",
+    marginTop: "0.2%",
 }
 
 const createMessage = (parentId, content) => {
@@ -29,11 +29,11 @@ const AddMessage = ({level, parentId, afterReply}) => {
     const addStyle = level > 0 ? {...areaStyle, marginLeft: `${level}%`} : areaStyle
     return (
         <div style={addStyle}>
-            <textarea ref={ref} rows={4} placeholder="New message ..." required/>
+            <textarea ref={ref} rows={4} placeholder="New message ..." required={true}/>
             <button onClick={() =>
                 createMessage(parentId, ref.current.value)
                     .then(() => ref.current.value = "")
-                    .then(() => afterReply())
+                    .then(afterReply)
             }>
                 Post
             </button>

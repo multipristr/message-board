@@ -13,7 +13,7 @@ const messageStyle = {
     height: "100%",
     backgroundColor: "black",
     color: "white",
-    margin: "0.2%",
+    marginTop: "0.2%",
     padding: "0.2%",
 }
 
@@ -99,7 +99,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                 </button>
                 <button onClick={() => deleteMessage(id)
                     .then(response => {
-                            if (response.status === 204) {
+                            if (response.status > 199 && response.status < 300) {
                                 deleteHierarchy()
                             }
                         }
