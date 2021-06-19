@@ -1,4 +1,5 @@
 import * as React from "react"
+import {useRef, useState} from "react"
 import {SERVER_URL} from "../config";
 
 const messageStyle = {
@@ -62,7 +63,7 @@ const deleteMessage = (id) => fetch(`${SERVER_URL}/message/${id}`, {
     credentials: 'include',
 })
 
-const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message${id}`, {
+const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
     method: 'PUT',
     credentials: 'include',
     headers: {
@@ -72,6 +73,9 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message${id}`, {
 })
 
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply}) => {
+    const contentRef = useRef(null)
+    const [modifying, setModifying] = useState(false)
+
     return (
         <div style={messageStyle}>
             <div style={headStyle}>
@@ -80,12 +84,15 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             </div>
             <div style={buttonsStyle}>
                 <button onClick={() => {
-                    // TODO FIXME Make content editable
-                    // TODO FIXME Select new content
-                    modifyMessage(id, "new content")
-                        .then(() => "")// TODO FIXME Reload message list
+                    setModifying(!modifying)
+                    if (modifying) {
+                        modifyMessage(id, contentRef.current.value)
+                            .then(() => "")// TODO FIXME Reload message list
+                    } else {
+                        contentRef.current.focus()
+                    }
                 }}>
-                    Modify
+                    {modifying ? "Save changes" : "Modify"}
                 </button>
                 <button onClick={() => deleteMessage(id)
                     .then(() => "") // TODO FIXME Reload message list
@@ -93,7 +100,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                     Delete
                 </button>
             </div>
-            <p style={contentStyle}>{content}</p>
+            <p style={contentStyle} ref={contentRef} contentEditable={modifying}>{content}</p>
             <button style={repliesStyle} onClick={() => operateReplies(id)}>{show ? "Show" : "Hide"} replies</button>
             <button style={replyStyle} onClick={() => addReply()}>Reply</button>
         </div>
