@@ -3,8 +3,8 @@ import {useRef, useState} from "react"
 import {SERVER_URL} from "../config";
 import {getAuthorization, getUser} from "./Authorization";
 import MessageHead from "./MessageHead";
-import MessageContent from "./MessageContent";
 import MessageReply from "./MessageReply";
+import ContentEditable from "react-contenteditable";
 
 const messageStyle = {
     display: "grid",
@@ -29,6 +29,14 @@ const modifiersStyle = {
     minWidth: "0",
 }
 
+const contentStyle = {
+    gridArea: "content",
+    alignSelf: "start",
+    justifySelf: "start",
+    maxWidth: "100%",
+    minWidth: "0",
+}
+
 const deleteMessage = (id) => fetch(`${SERVER_URL}/message/${id}`, {
     method: 'DELETE',
     credentials: 'include',
@@ -48,24 +56,23 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
 })
 
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
-    const contentRef = useRef(null)
+    const contentRef = useRef(content)
     const [isModifying, setModifying] = useState(false)
     const [modifiedTimestamp, setModifiedTimeStamp] = useState(lastModifiedAt)
 
     return (
-        <div style={messageStyle}>
+        <section style={messageStyle}>
             <MessageHead author={author} createdAt={createdAt} modifiedTimestamp={modifiedTimestamp}/>
             {getUser() === author &&
             <div style={modifiersStyle}>
                 <button onClick={() => {
                     if (isModifying) {
-                        modifyMessage(id, contentRef.current.innerHTML)
+                        modifyMessage(id, contentRef.current)
                             .then(response => response.json())
                             .then(timestamp => setModifiedTimeStamp(timestamp))
                             .then(() => setModifying(false))
                     } else {
                         setModifying(true)
-                        contentRef.current.focus()
                     }
                 }}>
                     {isModifying ? "Save changes" : "Modify"}
@@ -82,9 +89,10 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                 </button>
             </div>
             }
-            <MessageContent ref={contentRef} contentEditable={isModifying} content={content}/>
+            <ContentEditable style={contentStyle} html={contentRef.current} tagName="p" disabled={!isModifying}
+                             onChange={event => contentRef.current = event.target.value}/>
             <MessageReply onClickReplies={() => operateReplies(id)} show={show} onClickReply={addReply}/>
-        </div>
+        </section>
     )
 }
 

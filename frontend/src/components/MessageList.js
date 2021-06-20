@@ -48,7 +48,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
 
     const addReply = useCallback(() => setReplying(true), []);
     return (
-        <div style={{paddingLeft: `${level}%`}}>
+        <article style={{paddingLeft: `${level}%`}}>
             {message &&
             <>
                 <Message
@@ -77,7 +77,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
             {(replying || level === -1) &&
             <AddMessage level={level + 1} parentId={message?.id} afterReply={afterReply}/>
             }
-        </div>
+        </article>
     );
 }
 
