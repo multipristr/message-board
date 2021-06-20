@@ -101,7 +101,7 @@ public class Neo4jMessageRepository implements IMessageRepository {
     public List<Message> selectTopLevelMessages() {
         List<Message> topLevelMessages;
         try (Transaction transaction = neo4j.beginTx()) {
-            topLevelMessages = neo4j.execute("MATCH (p:Message) WHERE NOT (p)<-[:PARENT_OF]-(:Message) RETURN p ORDER BY p.createdAt").columnAs("p")
+            topLevelMessages = neo4j.execute("MATCH (p:Message) WHERE NOT (p)<-[:PARENT_OF]-(:Message) RETURN p ORDER BY p.createdAt DESC").columnAs("p")
                     .stream()
                     .map(node -> toMessage((Node) node))
                     .collect(Collectors.toList());
