@@ -44,9 +44,8 @@ const MessageList = ({message, level, deleteHierarchy}) => {
         fetchMessages(message?.id)
     }, [fetchMessages, message])
 
-    const deleteChildHierarchy = useCallback(() => setMessages(messages.filter(mes => mes.id !== message.id)), [messages, message]);
-
     const addReply = useCallback(() => setReplying(true), []);
+
     return (
         <article style={{paddingLeft: `${level}%`}}>
             {message &&
@@ -69,7 +68,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                     <MessageList
                         message={message}
                         level={level + 1}
-                        deleteHierarchy={deleteChildHierarchy}
+                        deleteHierarchy={() => setMessages(messages.filter(mes => mes.id !== message.id))}
                         key={message.id}
                     />
                 );

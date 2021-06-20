@@ -33,8 +33,8 @@ const contentStyle = {
     gridArea: "content",
     alignSelf: "start",
     justifySelf: "start",
-    maxWidth: "100%",
-    minWidth: "0",
+    width: "100%",
+    height: "100%",
 }
 
 const deleteMessage = (id) => fetch(`${SERVER_URL}/message/${id}`, {
