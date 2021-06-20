@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins');
 
-html, body, #___gatsby {
+html, body, #___gatsby, #gatsby-focus-wrapper {
     height: 100%;
     width: 100%;
     margin: 0 auto;

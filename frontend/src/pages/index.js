@@ -6,7 +6,10 @@ import Logout from "../components/Logout";
 import {clearAuthorization, getAuthorization, setJwt} from "../components/Authorization";
 
 const indexStyle = {
-    padding: "0.2%"
+    width: "100%",
+    height: "100%",
+    padding: "0.2%",
+    boxSizing: "border-box",
 }
 
 const IndexPage = () => {
