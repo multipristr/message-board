@@ -22,7 +22,6 @@ public class DefaultMessageService implements IMessageService {
     @Autowired
     public DefaultMessageService(IMessageRepository repository) {
         this.repository = repository;
-        repository.saveMessage(new Message().setAuthor("user").setContent("content").setParentId(UUID.randomUUID())); // TODO FIXME remove
         repository.saveMessage(new Message().setAuthor("user2").setContent("content2"));
         UUID parentId = UUID.randomUUID();
         repository.saveMessage(new Message().setAuthor("user3").setContent("content3").setId(parentId));
@@ -82,6 +81,6 @@ public class DefaultMessageService implements IMessageService {
 
     @Override
     public List<Message> getAllChildMessages(UUID parentId) {
-        return repository.selectChildMessages(parentId);
+        return parentId != null ? repository.selectChildMessages(parentId) : repository.selectTopLevelMessages();
     }
 }
