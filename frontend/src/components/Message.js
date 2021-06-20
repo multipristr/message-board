@@ -1,7 +1,7 @@
 import * as React from "react"
 import {useRef, useState} from "react"
-import {SERVER_URL, STORAGE_KEY_USER} from "../config";
-import {getAuthorization} from "./Authorization";
+import {SERVER_URL} from "../config";
+import {getAuthorization, getUser} from "./Authorization";
 import MessageHead from "./MessageHead";
 import MessageContent from "./MessageContent";
 import MessageReply from "./MessageReply";
@@ -55,7 +55,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
     return (
         <div style={messageStyle}>
             <MessageHead author={author} createdAt={createdAt} modifiedTimestamp={modifiedTimestamp}/>
-            {window.localStorage.getItem(STORAGE_KEY_USER) === author &&
+            {getUser() === author &&
             <div style={modifiersStyle}>
                 <button onClick={() => {
                     if (isModifying) {
