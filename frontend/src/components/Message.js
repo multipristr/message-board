@@ -2,6 +2,9 @@ import * as React from "react"
 import {useRef, useState} from "react"
 import {SERVER_URL, STORAGE_KEY_USER} from "../config";
 import {getAuthorization} from "./Authorization";
+import MessageHead from "./MessageHead";
+import MessageContent from "./MessageContent";
+import MessageReply from "./MessageReply";
 
 const messageStyle = {
     display: "grid",
@@ -18,42 +21,9 @@ const messageStyle = {
     padding: "0.2%",
 }
 
-const headStyle = {
-    gridArea: "head",
-    alignSelf: "start",
-    justifySelf: "start",
-    maxWidth: "100%",
-    minWidth: "0",
-    fontFamily: "monospace",
-}
-
-const buttonsStyle = {
+const modifiersStyle = {
     gridArea: "buttons",
     alignSelf: "start",
-    justifySelf: "end",
-    maxWidth: "100%",
-    minWidth: "0",
-}
-
-const contentStyle = {
-    gridArea: "content",
-    alignSelf: "start",
-    justifySelf: "start",
-    maxWidth: "100%",
-    minWidth: "0",
-}
-
-const repliesStyle = {
-    gridArea: "replies",
-    alignSelf: "start",
-    justifySelf: "start",
-    maxWidth: "100%",
-    minWidth: "0",
-}
-
-const replyStyle = {
-    gridArea: "reply",
-    alignSelf: "end",
     justifySelf: "end",
     maxWidth: "100%",
     minWidth: "0",
@@ -79,19 +49,16 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
 
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
     const contentRef = useRef(null)
-    const [modifying, setModifying] = useState(false)
+    const [isModifying, setModifying] = useState(false)
     const [modifiedTimestamp, setModifiedTimeStamp] = useState(lastModifiedAt)
 
     return (
         <div style={messageStyle}>
-            <div style={headStyle}>
-                {author}&nbsp;Created: <time>{new Date(createdAt).toLocaleString()}</time>&nbsp;
-                {modifiedTimestamp !== createdAt && <>Modified: <time>{new Date(modifiedTimestamp).toLocaleString()}</time>&nbsp;</>}
-            </div>
+            <MessageHead author={author} createdAt={createdAt} modifiedTimestamp={modifiedTimestamp}/>
             {window.localStorage.getItem(STORAGE_KEY_USER) === author &&
-            <div style={buttonsStyle}>
+            <div style={modifiersStyle}>
                 <button onClick={() => {
-                    if (modifying) {
+                    if (isModifying) {
                         modifyMessage(id, contentRef.current.innerHTML)
                             .then(response => response.json())
                             .then(timestamp => setModifiedTimeStamp(timestamp))
@@ -101,7 +68,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                         contentRef.current.focus()
                     }
                 }}>
-                    {modifying ? "Save changes" : "Modify"}
+                    {isModifying ? "Save changes" : "Modify"}
                 </button>
                 <button onClick={() => deleteMessage(id)
                     .then(response => {
@@ -115,9 +82,8 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                 </button>
             </div>
             }
-            <p style={contentStyle} ref={contentRef} contentEditable={modifying}>{content}</p>
-            <button style={repliesStyle} onClick={() => operateReplies(id)}>{show ? "Show" : "Hide"} replies</button>
-            <button style={replyStyle} onClick={() => addReply()}>Reply</button>
+            <MessageContent ref={contentRef} contentEditable={isModifying} content={content}/>
+            <MessageReply onClickReplies={() => operateReplies(id)} show={show} onClickReply={addReply}/>
         </div>
     )
 }

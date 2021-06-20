@@ -34,16 +34,19 @@ const MessageList = ({message, level, deleteHierarchy}) => {
         }
     }, [message, messages, fetchMessages]);
 
-    const hideMessages = () => {
+    const hideMessages = useCallback(() => {
         setMessages([])
         setShow(true)
-    }
+    }, [])
 
-    const afterReply = () => {
+    const afterReply = useCallback(() => {
         setReplying(false)
         fetchMessages(message?.id)
-    }
+    }, [fetchMessages, message])
 
+    const deleteChildHierarchy = useCallback(() => setMessages(messages.filter(mes => mes.id !== message.id)), [messages, message]);
+
+    const addReply = useCallback(() => setReplying(true), []);
     return (
         <div style={{paddingLeft: `${level}%`}}>
             {message &&
@@ -51,7 +54,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                 <Message
                     operateReplies={show ? fetchMessages : hideMessages}
                     show={show}
-                    addReply={() => setReplying(true)}
+                    addReply={addReply}
                     deleteHierarchy={deleteHierarchy}
                     id={message.id}
                     author={message.author}
@@ -61,14 +64,16 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                 />
             </>
             }
-            {messages.map(message => (
-                <MessageList
-                    message={message}
-                    level={level + 1}
-                    deleteHierarchy={() => setMessages(messages.filter(mes => mes.id !== message.id))}
-                    key={message.id}
-                />
-            ))}
+            {messages.map(message => {
+                return (
+                    <MessageList
+                        message={message}
+                        level={level + 1}
+                        deleteHierarchy={deleteChildHierarchy}
+                        key={message.id}
+                    />
+                );
+            })}
             {(replying || level === -1) &&
             <AddMessage level={level + 1} parentId={message?.id} afterReply={afterReply}/>
             }
