@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {SERVER_URL} from "../config";
 import Message from "./Message";
 import AddMessage from "./AddMessage";
+import {getAuthorization} from "./Authorization";
 
 const MessageList = ({message, level, deleteHierarchy}) => {
     const [messages, setMessages] = useState([]);
@@ -18,7 +19,8 @@ const MessageList = ({message, level, deleteHierarchy}) => {
             credentials: 'include',
             headers: {
                 "Accept": "application/json",
-            }
+                "Authorization": getAuthorization(),
+            },
         })
             .then(response => response.json())
             .then(data => setMessages(data))

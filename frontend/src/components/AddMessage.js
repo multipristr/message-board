@@ -1,6 +1,7 @@
 import * as React from "react"
 import {useRef} from "react"
 import {SERVER_URL} from "../config";
+import {getAuthorization} from "./Authorization";
 
 const areaStyle = {
     display: "grid",
@@ -17,6 +18,7 @@ const createMessage = (parentId, content) => {
         credentials: 'include',
         headers: {
             "Content-Type": "application/json",
+            "Authorization": getAuthorization(),
         },
         body: content,
     })

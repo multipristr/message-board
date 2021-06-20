@@ -1,6 +1,7 @@
 import * as React from "react"
 import {useRef, useState} from "react"
-import {SERVER_URL} from "../config";
+import {SERVER_URL, STORAGE_KEY_USER} from "../config";
+import {getAuthorization} from "./Authorization";
 
 const messageStyle = {
     display: "grid",
@@ -61,6 +62,9 @@ const replyStyle = {
 const deleteMessage = (id) => fetch(`${SERVER_URL}/message/${id}`, {
     method: 'DELETE',
     credentials: 'include',
+    headers: {
+        "Authorization": getAuthorization(),
+    },
 })
 
 const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
@@ -68,6 +72,7 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
     credentials: 'include',
     headers: {
         "Content-Type": "application/json",
+        "Authorization": getAuthorization(),
     },
     body: content,
 })
@@ -83,6 +88,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                 {author}&nbsp;Created: <time>{new Date(createdAt).toLocaleString()}</time>&nbsp;
                 {modifiedTimestamp !== createdAt && <>Modified: <time>{new Date(modifiedTimestamp).toLocaleString()}</time>&nbsp;</>}
             </div>
+            {window.localStorage.getItem(STORAGE_KEY_USER) === author &&
             <div style={buttonsStyle}>
                 <button onClick={() => {
                     if (modifying) {
@@ -108,6 +114,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                     Delete
                 </button>
             </div>
+            }
             <p style={contentStyle} ref={contentRef} contentEditable={modifying}>{content}</p>
             <button style={repliesStyle} onClick={() => operateReplies(id)}>{show ? "Show" : "Hide"} replies</button>
             <button style={replyStyle} onClick={() => addReply()}>Reply</button>

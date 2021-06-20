@@ -12,13 +12,16 @@ const indexStyle = {
 const IndexPage = () => {
     const [isAuthorized, setAuthorized] = useState(window.localStorage.getItem(STORAGE_KEY_USER) !== null)
 
-    const afterLogin = (user) => {
-        window.localStorage.setItem(STORAGE_KEY_USER, user)
+    const afterLogin = (token) => {
+        const jwt = JSON.parse(atob(token.split('.')[1]));
+        document.cookie = `token=${encodeURIComponent(token)}; expires=${new Date(jwt.exp * 1000).toUTCString()}; samesite=lax`
+        window.localStorage.setItem(STORAGE_KEY_USER, jwt.sub)
         setAuthorized(true)
     }
 
     const afterLogout = () => {
         window.localStorage.removeItem(STORAGE_KEY_USER)
+        document.cookie = `token=; max-age=-1`
         setAuthorized(false)
     }
 

@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
         DataSourceTransactionManagerAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class
 })
-@ComponentScan(basePackages = {"controller", "service", "repository", "config"})
+@ComponentScan(basePackages = {"controller", "service", "repository", "security"})
 public class SpringBootMainClass {
 
     public static void main(String[] args) {

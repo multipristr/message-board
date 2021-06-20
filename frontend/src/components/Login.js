@@ -4,7 +4,7 @@ import {SERVER_URL} from "../config";
 const Login = ({afterLogin}) => {
     const register = (e) => {
         e.preventDefault()
-        fetch(`${SERVER_URL}/user`, {
+        fetch(`${SERVER_URL}/register`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -21,18 +21,17 @@ const Login = ({afterLogin}) => {
 
     const logIn = (e) => {
         e.preventDefault()
-        fetch(`${SERVER_URL}/messages`, {
-            method: 'OPTIONS',
+        fetch(`${SERVER_URL}/login`, {
+            method: 'POST',
             credentials: 'include',
             headers: {
-                "Authorization": `Basic ${btoa(e.target.form[0].value + ":" + e.target.form[1].value)}`,
-                "X-Requested-With": "XMLHttpRequest",
+                "Content-Type": "application/json",
+                "Accept": "text/plain",
             },
-        }).then(response => {
-            if (response.status > 199 && response.status < 300) {
-                afterLogin(e.target.form[0].value)
-            }
+            body: JSON.stringify({login: e.target.form[0].value, password: e.target.form[1].value}),
         })
+            .then(response => response.text())
+            .then(token => afterLogin(token))
     }
 
     return (
