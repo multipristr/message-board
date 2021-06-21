@@ -48,7 +48,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
 
     return (
         <article style={{paddingLeft: `${level}%`}}>
-            {(replying || level === -1) &&
+            {level === -1 &&
             <AddMessage level={level + 1} parentId={message?.id} afterReply={afterReply}/>
             }
             {message &&
@@ -76,6 +76,9 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                     />
                 );
             })}
+            {replying &&
+            <AddMessage level={level + 1} parentId={message?.id} afterReply={afterReply}/>
+            }
         </article>
     );
 }
