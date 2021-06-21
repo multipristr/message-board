@@ -15,7 +15,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
-    implementation("org.neo4j:neo4j-jdbc-driver:4.0.1")
+    implementation("org.neo4j:neo4j-jdbc-driver:3.5.2")
     implementation("org.mockito:mockito-core:3.11.1")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

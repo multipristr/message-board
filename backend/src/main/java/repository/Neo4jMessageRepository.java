@@ -43,7 +43,7 @@ public class Neo4jMessageRepository implements IMessageRepository {
             preparedStatement.setString(3, message.getAuthor());
             preparedStatement.setString(4, message.getLastModifiedAt().toString());
             preparedStatement.setString(5, message.getContent());
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
         }
@@ -54,7 +54,7 @@ public class Neo4jMessageRepository implements IMessageRepository {
             )) {
                 preparedStatement.setString(1, message.getId().toString());
                 preparedStatement.setString(2, message.getParentId().toString());
-                preparedStatement.execute();
+                preparedStatement.executeUpdate();
             } catch (SQLException throwables) {
                 throw new RuntimeException(throwables);
             }
@@ -73,7 +73,7 @@ public class Neo4jMessageRepository implements IMessageRepository {
             preparedStatement.setString(1, message.getId().toString());
             preparedStatement.setString(2, message.getContent());
             preparedStatement.setString(3, message.getLastModifiedAt().toString());
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
         }
@@ -87,7 +87,7 @@ public class Neo4jMessageRepository implements IMessageRepository {
                 "MATCH (parent:Message {id: ?})-[*0..]->(child) DETACH DELETE parent, child"
         )) {
             preparedStatement.setString(1, id.toString());
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
         }

@@ -29,20 +29,15 @@ services:
       - frontend
 
   neo4j:
-    image: neo4j:4.3.0-community
+    image: neo4j:3.5.28-community
     ports:
       - 7687:7687 #Bolt
       - 7474:7474 #HTTP
     restart: always
     environment:
       NEO4J_AUTH: neo4j/password
-    volumes:
-      - neo4j_data:/data/
     networks:
       - backend
-
-volumes:
-  neo4j_data:
 
 networks:
   backend:

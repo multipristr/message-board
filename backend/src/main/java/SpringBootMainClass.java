@@ -45,7 +45,9 @@ public class SpringBootMainClass {
     @Bean(name = "neo4j")
     public Connection connection() throws SQLException {
         String jdbcUrl = Optional.ofNullable(System.getenv("JDBC_DATABASE_URL")).orElse("jdbc:neo4j:bolt://localhost:7687/?user=neo4j,password=password,scheme=basic");
-        return DriverManager.getConnection(jdbcUrl);
+        Connection connection = DriverManager.getConnection(jdbcUrl);
+        connection.setAutoCommit(false);
+        return connection;
     }
 
     @Bean
