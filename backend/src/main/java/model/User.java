@@ -1,10 +1,14 @@
 package model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
     private static final long serialVersionUID = -7957258751882803869L;
+    @ApiModelProperty(required = true)
     private String login;
+    @ApiModelProperty(required = true)
     private String password;
 
     public String getLogin() {
