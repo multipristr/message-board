@@ -28,5 +28,5 @@ export const setJwt = (token, afterExpiring) => {
 
 export const clearAuthorization = () => {
     window.localStorage.removeItem(STORAGE_KEY_USER)
-    document.cookie = `${COOKIE_NAME}}=; max-age=-1`
+    document.cookie = `${COOKIE_NAME}=; max-age=-1`
 }

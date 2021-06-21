@@ -36,8 +36,13 @@ services:
     restart: always
     environment:
       NEO4J_AUTH: neo4j/password
+    volumes:
+      - neo4j_data:/data/
     networks:
       - backend
+
+volumes:
+  neo4j_data:
 
 networks:
   backend:
