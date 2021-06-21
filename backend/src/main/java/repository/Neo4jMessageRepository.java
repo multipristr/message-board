@@ -1,29 +1,28 @@
 package repository;
 
 import model.Message;
-import org.neo4j.graphdb.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
-import persistence.Neo4j;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.ZonedDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-@Primary
-@Repository
+@Repository("neo4jMessageRepository")
 public class Neo4jMessageRepository implements IMessageRepository {
-    private static final Label MESSAGE_LABEL = Label.label("Message");
-    private static final RelationshipType PARENT_RELATIONSHIP = RelationshipType.withName("PARENT_OF");
-    private final GraphDatabaseService neo4j;
+    private final Connection neo4j;
 
+    @Lazy
     @Autowired
-    public Neo4jMessageRepository(Neo4j neo4j) {
-        this.neo4j = neo4j.getDatabaseService();
+    public Neo4jMessageRepository(Connection neo4j) {
+        this.neo4j = neo4j;
     }
 
     @Override
@@ -36,20 +35,29 @@ public class Neo4jMessageRepository implements IMessageRepository {
         }
         message.setLastModifiedAt(ZonedDateTime.now());
 
-        try (Transaction transaction = neo4j.beginTx()) {
-            Node node = neo4j.createNode(MESSAGE_LABEL);
-            node.setProperty("id", message.getId().toString());
-            node.setProperty("createdAt", message.getCreatedAt());
-            node.setProperty("author", message.getAuthor());
-            node.setProperty("lastModifiedAt", message.getLastModifiedAt());
-            node.setProperty("content", message.getContent());
+        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                "CREATE (m:Message {id: ?, createdAt: ?, author: ?, lastModifiedAt: ?, content: ?})"
+        )) {
+            preparedStatement.setString(1, message.getId().toString());
+            preparedStatement.setString(2, message.getCreatedAt().toString());
+            preparedStatement.setString(3, message.getAuthor());
+            preparedStatement.setString(4, message.getLastModifiedAt().toString());
+            preparedStatement.setString(5, message.getContent());
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
 
-            if (message.getParentId() != null) {
-                Node parent = neo4j.findNode(MESSAGE_LABEL, "id", message.getParentId().toString());
-                parent.createRelationshipTo(node, PARENT_RELATIONSHIP);
+        if (message.getParentId() != null) {
+            try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                    "MATCH (child:Message), (parent:Message) WHERE child.id = ? AND parent.id = ? CREATE (parent)-[:PARENT_OF]->(child)"
+            )) {
+                preparedStatement.setString(1, message.getId().toString());
+                preparedStatement.setString(2, message.getParentId().toString());
+                preparedStatement.execute();
+            } catch (SQLException throwables) {
+                throw new RuntimeException(throwables);
             }
-
-            transaction.success();
         }
 
         return message.getId();
@@ -59,12 +67,15 @@ public class Neo4jMessageRepository implements IMessageRepository {
     public ZonedDateTime updateMessage(Message message) {
         message.setLastModifiedAt(ZonedDateTime.now());
 
-        try (Transaction transaction = neo4j.beginTx()) {
-            Node node = neo4j.findNode(MESSAGE_LABEL, "id", message.getId().toString());
-            node.setProperty("content", message.getContent());
-            node.setProperty("lastModifiedAt", message.getLastModifiedAt());
-
-            transaction.success();
+        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                "MATCH (m {id: ?}) SET m.content = ?, m.lastModifiedAt = ?"
+        )) {
+            preparedStatement.setString(1, message.getId().toString());
+            preparedStatement.setString(2, message.getContent());
+            preparedStatement.setString(3, message.getLastModifiedAt().toString());
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
 
         return message.getLastModifiedAt();
@@ -72,55 +83,74 @@ public class Neo4jMessageRepository implements IMessageRepository {
 
     @Override
     public void deleteMessage(UUID id) {
-        try (Transaction transaction = neo4j.beginTx()) {
-            neo4j.execute("MATCH (parent:Message {id:$id})-[*0..]->(child) DETACH DELETE parent, child", Collections.singletonMap("id", id.toString()));
-            transaction.success();
+        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                "MATCH (parent:Message {id: ?})-[*0..]->(child) DETACH DELETE parent, child"
+        )) {
+            preparedStatement.setString(1, id.toString());
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
     }
 
-    private Message toMessage(Node node) {
+    private Message toMessage(ResultSet result) throws SQLException {
         return new Message()
-                .setContent((String) node.getProperty("content"))
-                .setId(UUID.fromString((String) node.getProperty("id")))
-                .setAuthor((String) node.getProperty("author"))
-                .setLastModifiedAt((ZonedDateTime) node.getProperty("lastModifiedAt"))
-                .setCreatedAt((ZonedDateTime) node.getProperty("createdAt"));
+                .setId(UUID.fromString(result.getString("m.id")))
+                .setCreatedAt(ZonedDateTime.parse(result.getString("m.createdAt")))
+                .setAuthor(result.getString("m.author"))
+                .setLastModifiedAt(ZonedDateTime.parse(result.getString("m.lastModifiedAt")))
+                .setContent(result.getString("m.content"));
     }
 
     @Override
     public Optional<Message> selectOneMessage(UUID id) {
-        Optional<Message> message;
-        try (Transaction transaction = neo4j.beginTx()) {
-            message = Optional.ofNullable(neo4j.findNode(MESSAGE_LABEL, "id", id.toString())).map(this::toMessage);
-            transaction.success();
+        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                "MATCH (m:Message {id: ?}) RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content"
+        )) {
+            preparedStatement.setString(1, id.toString());
+            ResultSet result = preparedStatement.executeQuery();
+            return result.next() ? Optional.of(toMessage(result)) : Optional.empty();
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
-        return message;
     }
 
     @Override
     public List<Message> selectTopLevelMessages() {
-        List<Message> topLevelMessages;
-        try (Transaction transaction = neo4j.beginTx()) {
-            topLevelMessages = neo4j.execute("MATCH (p:Message) WHERE NOT (p)<-[:PARENT_OF]-(:Message) RETURN p ORDER BY p.createdAt DESC").columnAs("p")
-                    .stream()
-                    .map(node -> toMessage((Node) node))
-                    .collect(Collectors.toList());
-            transaction.success();
+        List<Message> topLevelMessages = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                "MATCH (m:Message) WHERE NOT (m)<-[:PARENT_OF]-(:Message) " +
+                        "RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content ORDER BY m.createdAt DESC"
+        )) {
+            ResultSet results = preparedStatement.executeQuery();
+            while (results.next()) {
+                topLevelMessages.add(toMessage(results));
+            }
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
+
         return topLevelMessages;
     }
 
     @Override
     public List<Message> selectChildMessages(UUID parentId) {
-        List<Message> children;
-        try (Transaction transaction = neo4j.beginTx()) {
-            children = neo4j.execute("MATCH (parent:Message)-[:PARENT_OF]->(child:Message) WHERE parent.id=$parentId RETURN child ORDER BY child.createdAt", Collections.singletonMap("parentId", parentId.toString()))
-                    .columnAs("child")
-                    .stream()
-                    .map(node -> toMessage((Node) node))
-                    .collect(Collectors.toList());
-            transaction.success();
+        List<Message> children = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+                "MATCH (parent:Message)-[:PARENT_OF]->(m:Message) WHERE parent.id=? " +
+                        "RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content ORDER BY m.createdAt"
+        )) {
+            preparedStatement.setString(1, parentId.toString());
+            ResultSet results = preparedStatement.executeQuery();
+            while (results.next()) {
+                children.add(toMessage(results));
+            }
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
+
         return children;
     }
 }

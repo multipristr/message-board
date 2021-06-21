@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
+@Repository("inMemoryMessageRepository")
 public class InMemoryMessageRepository implements IMessageRepository {
     private final Map<UUID, Message> database = new LinkedHashMap<>();
 

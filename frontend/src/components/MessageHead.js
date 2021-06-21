@@ -11,8 +11,8 @@ const headStyle = {
 
 const MessageHead = ({author, createdAt, modifiedTimestamp}) => {
     return <header style={headStyle}>
-        {author}&nbsp;Created: <time>{new Date(createdAt).toLocaleString()}</time>&nbsp;
-        {modifiedTimestamp !== createdAt && <>Modified: <time>{new Date(modifiedTimestamp).toLocaleString()}</time>&nbsp;</>}
+        {author}&nbsp;Created: <time>{new Date(createdAt * 1000).toLocaleString()}</time>&nbsp;
+        {modifiedTimestamp !== createdAt && <>Modified: <time>{new Date(modifiedTimestamp * 1000).toLocaleString()}</time>&nbsp;</>}
     </header>;
 }
 
