@@ -8,8 +8,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IMessageRepository {
+    /**
+     * @return persisted message ID
+     */
     UUID saveMessage(Message message);
 
+    /**
+     * @return persisted lastModifiedAt timestamp
+     */
     ZonedDateTime updateMessage(Message message);
 
     void deleteMessage(UUID id);

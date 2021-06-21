@@ -1,1 +1,34 @@
 # message-board
+
+## Running the solution
+Clone and run the solution in Docker compose by executing
+```shell
+git clone https://github.com/hamsatom-psql/message-board.git && cd message-board && docker-compose up
+```
+UI is running on [localhost:8000](http://localhost:8000)  
+There's Swagger running at [localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)  
+API  base url is [localhost:8080](http://localhost:8080)
+
+### UI locally 
+1. down Docker compose service `message-board-frontend`
+2. run
+```shell
+cd frontend && npm install && npm run develop
+```
+
+### API locally
+1. down Docker compose service `message-board-backend`
+2. have running Docker compose service `neo4j`
+3. build by executing
+```shell
+cd backend && ./gradlew build
+```
+4. run Java application with main class [SpringBootMainClass](backend/src/main/java/SpringBootMainClass.java)
+
+## Disabling Neo4J
+You can change Neo4J repository to Java map backed repository by changing `@Qualifier("neo4jMessageRepository")` to `@Qualifier("inMemoryMessageRepository")` in constructor of [DefaultMessageService.java](backend/src/main/java/service/DefaultMessageService.java)
+
+## Database choice
+I chose Neo4J because it can easily operate with message hierarchy.
+If I didn't introduce replies I would opt for an SQL database.
+With user login as foreign key in message table I could easily find user's messages and privileges would be more secure and flexible. 
