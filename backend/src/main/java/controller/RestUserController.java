@@ -23,7 +23,7 @@ public class RestUserController {
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully logged id"),
-            @ApiResponse(code = 400, message = "Invalid user object"),
+            @ApiResponse(code = 400, message = "Empty credentials"),
             @ApiResponse(code = 401, message = "Invalid credentials"),
     })
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
@@ -34,7 +34,7 @@ public class RestUserController {
     @ApiResponses({
             @ApiResponse(code = 201, message = "Successfully registered"),
             @ApiResponse(code = 409, message = "Login already taken"),
-            @ApiResponse(code = 400, message = "Invalid user object"),
+            @ApiResponse(code = 400, message = "Empty credentials"),
     })
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> registerUser(@RequestBody User user) {

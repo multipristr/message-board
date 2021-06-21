@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 class InMemoryMessageRepositoryTest {
@@ -22,7 +23,9 @@ class InMemoryMessageRepositoryTest {
     void save() {
         Message message = new Message().setId(ID1).setContent("content");
         repository.saveMessage(message);
-        Message savedMessage = repository.selectOneMessage(ID1).get();
+        Optional<Message> optionalMessage = repository.selectOneMessage(ID1);
+        Assertions.assertTrue(optionalMessage.isPresent());
+        Message savedMessage = optionalMessage.get();
         Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("content", savedMessage.getContent());
     }
@@ -40,7 +43,9 @@ class InMemoryMessageRepositoryTest {
         repository.saveMessage(message);
         message.setContent("new content");
         repository.updateMessage(message);
-        Message savedMessage = repository.selectOneMessage(ID1).get();
+        Optional<Message> optionalMessage = repository.selectOneMessage(ID1);
+        Assertions.assertTrue(optionalMessage.isPresent());
+        Message savedMessage = optionalMessage.get();
         Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("new content", savedMessage.getContent());
     }
