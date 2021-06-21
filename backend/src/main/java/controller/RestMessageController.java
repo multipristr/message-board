@@ -26,6 +26,7 @@ public class RestMessageController {
     @ApiResponses({
             @ApiResponse(code = 201, message = "Successfully created message"),
             @ApiResponse(code = 400, message = "Empty message content"),
+            @ApiResponse(code = 401, message = "Not logged in"),
     })
     @PostMapping(value = "/message", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UUID> createMessage(@RequestBody String content, @RequestParam(required = false) UUID parentId) {
@@ -36,6 +37,7 @@ public class RestMessageController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully modified message, attached updated modified timestamp"),
             @ApiResponse(code = 400, message = "Empty message content"),
+            @ApiResponse(code = 401, message = "Not logged in"),
             @ApiResponse(code = 404, message = "No Message with the provided ID"),
     })
     @PutMapping(value = "/message/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +47,7 @@ public class RestMessageController {
 
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successfully deleted message"),
+            @ApiResponse(code = 401, message = "Not logged in"),
             @ApiResponse(code = 404, message = "No Message with the provided ID"),
     })
     @DeleteMapping("/message/{id}")

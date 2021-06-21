@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 class InMemoryUserRepositoryTest {
-    private IUserRepository userRepository;
+    private InMemoryUserRepository userRepository;
 
     @BeforeEach
     void setUp() {
