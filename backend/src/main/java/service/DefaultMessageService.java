@@ -3,6 +3,7 @@ package service;
 import model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class DefaultMessageService implements IMessageService {
     private final IMessageRepository repository;
 
+    @Lazy
     @Autowired
     public DefaultMessageService(@Qualifier("neo4jMessageRepository") IMessageRepository repository) {
         this.repository = repository;
