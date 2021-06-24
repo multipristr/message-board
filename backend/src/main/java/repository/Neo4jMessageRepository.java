@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,11 +18,11 @@ import java.util.UUID;
 
 @Repository("neo4jMessageRepository")
 public class Neo4jMessageRepository implements IMessageRepository {
-    private final Connection neo4j;
+    private final DataSource neo4j;
 
     @Lazy
     @Autowired
-    public Neo4jMessageRepository(Connection neo4j) {
+    public Neo4jMessageRepository(DataSource neo4j) {
         this.neo4j = neo4j;
     }
 
@@ -35,28 +36,41 @@ public class Neo4jMessageRepository implements IMessageRepository {
         }
         message.setLastModifiedAt(ZonedDateTime.now());
 
-        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
-                "CREATE (m:Message {id: ?, createdAt: ?, author: ?, lastModifiedAt: ?, content: ?})"
-        )) {
-            preparedStatement.setString(1, message.getId().toString());
-            preparedStatement.setString(2, message.getCreatedAt().toString());
-            preparedStatement.setString(3, message.getAuthor());
-            preparedStatement.setString(4, message.getLastModifiedAt().toString());
-            preparedStatement.setString(5, message.getContent());
-            preparedStatement.executeUpdate();
+        Connection connection = null;
+        try {
+            connection = neo4j.getConnection();
+            try (
+                    PreparedStatement preparedStatement = connection.prepareStatement(
+                            "CREATE (m:Message {id: ?, createdAt: ?, author: ?, lastModifiedAt: ?, content: ?})"
+                    )) {
+                connection.setAutoCommit(false);
+                preparedStatement.setString(1, message.getId().toString());
+                preparedStatement.setString(2, message.getCreatedAt().toString());
+                preparedStatement.setString(3, message.getAuthor());
+                preparedStatement.setString(4, message.getLastModifiedAt().toString());
+                preparedStatement.setString(5, message.getContent());
+                preparedStatement.executeUpdate();
+            }
+
+            if (message.getParentId() != null) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(
+                        "MATCH (child:Message), (parent:Message) WHERE child.id = ? AND parent.id = ? CREATE (parent)-[:PARENT_OF]->(child)"
+                )) {
+                    preparedStatement.setString(1, message.getId().toString());
+                    preparedStatement.setString(2, message.getParentId().toString());
+                    preparedStatement.executeUpdate();
+                }
+            }
+            connection.commit();
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
-        }
-
-        if (message.getParentId() != null) {
-            try (PreparedStatement preparedStatement = neo4j.prepareStatement(
-                    "MATCH (child:Message), (parent:Message) WHERE child.id = ? AND parent.id = ? CREATE (parent)-[:PARENT_OF]->(child)"
-            )) {
-                preparedStatement.setString(1, message.getId().toString());
-                preparedStatement.setString(2, message.getParentId().toString());
-                preparedStatement.executeUpdate();
-            } catch (SQLException throwables) {
-                throw new RuntimeException(throwables);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    throw new RuntimeException(throwables);
+                }
             }
         }
 
@@ -67,7 +81,8 @@ public class Neo4jMessageRepository implements IMessageRepository {
     public ZonedDateTime updateMessage(Message message) {
         message.setLastModifiedAt(ZonedDateTime.now());
 
-        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+        try (Connection connection = neo4j.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
                 "MATCH (m {id: ?}) SET m.content = ?, m.lastModifiedAt = ?"
         )) {
             preparedStatement.setString(1, message.getId().toString());
@@ -83,7 +98,8 @@ public class Neo4jMessageRepository implements IMessageRepository {
 
     @Override
     public void deleteMessage(UUID id) {
-        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+        try (Connection connection = neo4j.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
                 "MATCH (parent:Message {id: ?})-[*0..]->(child) DETACH DELETE parent, child"
         )) {
             preparedStatement.setString(1, id.toString());
@@ -104,7 +120,8 @@ public class Neo4jMessageRepository implements IMessageRepository {
 
     @Override
     public Optional<Message> selectOneMessage(UUID id) {
-        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+        try (Connection connection = neo4j.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
                 "MATCH (m:Message {id: ?}) RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content"
         )) {
             preparedStatement.setString(1, id.toString());
@@ -119,7 +136,8 @@ public class Neo4jMessageRepository implements IMessageRepository {
     public List<Message> selectTopLevelMessages() {
         List<Message> topLevelMessages = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+        try (Connection connection = neo4j.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
                 "MATCH (m:Message) WHERE NOT (m)<-[:PARENT_OF]-(:Message) " +
                         "RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content ORDER BY m.createdAt DESC"
         )) {
@@ -138,7 +156,8 @@ public class Neo4jMessageRepository implements IMessageRepository {
     public List<Message> selectChildMessages(UUID parentId) {
         List<Message> children = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement = neo4j.prepareStatement(
+        try (Connection connection = neo4j.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
                 "MATCH (parent:Message)-[:PARENT_OF]->(m:Message) WHERE parent.id=? " +
                         "RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content ORDER BY m.createdAt"
         )) {
