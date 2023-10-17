@@ -1,5 +1,12 @@
 # message-board
 
+## A RESTful API to serve as the backend for a public message board
+It should support the following features: 
+- A client can create a message in the service
+- A client can modify their own messages
+- A client can delete their own messages
+- A client can view all messages in the service 
+
 ## Running the solution
 Clone and run the solution in Docker compose by executing
 ```shell
