@@ -37,7 +37,7 @@ const contentStyle = {
     height: "100%",
 }
 
-const deleteMessage = (id) => fetch(`${SERVER_URL}/message/${id}`, {
+const deleteMessage = (id) => fetch(`${SERVER_URL}/messages/${id}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
@@ -45,14 +45,15 @@ const deleteMessage = (id) => fetch(`${SERVER_URL}/message/${id}`, {
     },
 })
 
-const modifyMessage = (id, content) => fetch(`${SERVER_URL}/message/${id}`, {
-    method: 'PUT',
+const modifyMessage = (id, content) => fetch(`${SERVER_URL}/messages/${id}`, {
+    method: 'PATCH',
     credentials: 'include',
     headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
         "Authorization": getAuthorization(),
     },
-    body: content,
+    body: JSON.stringify({content: content})
 })
 
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
@@ -69,7 +70,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
                     if (isModifying) {
                         modifyMessage(id, contentRef.current)
                             .then(response => response.json())
-                            .then(timestamp => setModifiedTimeStamp(timestamp))
+                            .then(message => setModifiedTimeStamp(message.lastModifiedAt))
                             .then(() => setModifying(false))
                     } else {
                         setModifying(true)

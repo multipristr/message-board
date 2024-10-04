@@ -31,8 +31,8 @@ services:
   neo4j:
     image: neo4j:3.5.28-community
     ports:
-      - 7687:7687 #Bolt
-      - 7474:7474 #HTTP
+      - "7687:7687" #Bolt
+      - "7474:7474" #HTTP
     restart: always
     environment:
       NEO4J_AUTH: neo4j/password

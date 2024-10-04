@@ -13,7 +13,7 @@ Clone and run the solution in Docker compose by executing
 git clone https://github.com/hamsatom-psql/message-board.git && cd message-board && docker-compose up
 ```
 UI is running on [localhost:8000](http://localhost:8000)  
-There's Swagger running at [localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)  
+There's Swagger running at [localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)  
 API  base url is [localhost:8080](http://localhost:8080)
 
 ### UI locally 
@@ -30,10 +30,10 @@ cd frontend && npm install && npm run develop
 ```shell
 cd backend && ./gradlew build
 ```
-4. run Java application with main class [SpringBootMainClass](backend/src/main/java/SpringBootMainClass.java)
+4. run Java application with main class [SpringBootMainClass](backend/src/main/java/org/SpringBootMainClass.java)
 
 ## Disabling Neo4J
-You can change Neo4J repository to Java map backed repository by changing `@Qualifier("neo4jMessageRepository")` to `@Qualifier("inMemoryMessageRepository")` in constructor of [DefaultMessageService.java](backend/src/main/java/service/DefaultMessageService.java)
+You can change Neo4J repository to Java map backed repository by changing `@Bean Neo4jMessageRepository` to `@Bean InMemoryMessageRepository` in [SpringConfiguration.java](backend/src/main/java/org/config/SpringConfiguration.java)
 
 ## Database choice
 I chose Neo4J because it can easily operate with message hierarchy.

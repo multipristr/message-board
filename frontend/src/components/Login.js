@@ -111,12 +111,12 @@ const Login = ({afterLogin}) => {
             credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "text/plain",
+                "Accept": "application/json",
             },
             body: JSON.stringify({login: e.target.form[0].value, password: e.target.form[1].value}),
         })
-            .then(response => response.text())
-            .then(token => afterLogin(token))
+            .then(response => response.json())
+            .then(response => afterLogin(response.token))
             .catch(() => setFail("Invalid username or password. Correct the credentials or register."))
     }
 

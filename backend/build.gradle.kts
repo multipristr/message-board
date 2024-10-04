@@ -1,11 +1,11 @@
 plugins {
     java
-    id("org.springframework.boot") version "2.5.1"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "2.7.18"
+    id("io.spring.dependency-management") version "1.1.6"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "org.messages"
+version = "1.1"
 
 repositories {
     mavenCentral()
@@ -14,17 +14,21 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    implementation("io.jsonwebtoken:jjwt-impl:0.12.6")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
     implementation("org.neo4j:neo4j-jdbc-driver:3.5.2")
     implementation("com.zaxxer", "HikariCP", "4.0.3")
-    implementation("org.mockito:mockito-core:3.11.1")
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
+    implementation("org.mockito:mockito-core:4.11.0")
+    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
+    implementation("org.slf4j:jcl-over-slf4j:1.7.36")
+    implementation("org.slf4j:log4j-over-slf4j:1.7.36")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
 
 springBoot {
-    mainClass.set("SpringBootMainClass")
+    mainClass.set("org.SpringBootMainClass")
 }
 
 tasks.getByName<Test>("test") {

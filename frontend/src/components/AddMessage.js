@@ -9,10 +9,7 @@ const areaStyle = {
 }
 
 const createMessage = (parentId, content) => {
-    let url = `${SERVER_URL}/message`
-    if (parentId) {
-        url += `?parentId=${parentId}`
-    }
+    let url = `${SERVER_URL}/messages`
     return fetch(url, {
         method: 'POST',
         credentials: 'include',
@@ -20,7 +17,7 @@ const createMessage = (parentId, content) => {
             "Content-Type": "application/json",
             "Authorization": getAuthorization(),
         },
-        body: content,
+        body: JSON.stringify({content: content, parentId: parentId})
     })
 }
 

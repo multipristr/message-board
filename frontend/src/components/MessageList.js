@@ -12,7 +12,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
     const fetchMessages = useCallback((parentId) => {
         let url = `${SERVER_URL}/messages`
         if (parentId) {
-            url += `?parentId=${parentId}`
+            url += `/${parentId}/children`
         }
         fetch(url, {
             method: 'GET',
@@ -32,7 +32,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
             fetchMessages()
             setShow(true)
         }
-    }, [message, messages, fetchMessages]);
+    }, []);
 
     const hideMessages = useCallback(() => {
         setMessages([])

@@ -1,8 +1,7 @@
 FROM node:16.3.0-alpine3.13 as builder
 ENV NODE_ENV=production
 
-ADD package.json /app/
-ADD package-lock.json /app/
+ADD package.json package-lock.json /app/
 WORKDIR /app
 RUN npm install --production
 ADD . /app
