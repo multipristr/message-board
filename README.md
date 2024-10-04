@@ -1,5 +1,8 @@
 # message-board
 
+![build](https://github.com/multipristr/message-board/actions/workflows/gradle.yml/badge.svg)
+![build](https://github.com/multipristr/message-board/actions/workflows/gatsby.yml/badge.svg)
+
 ## A RESTful API to serve as the backend for a public message board
 It should support the following features: 
 - A client can create a message in the service
