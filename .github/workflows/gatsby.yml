@@ -10,6 +10,9 @@ defaults:
   run:
     working-directory: ./frontend
 
+env:
+  NODE_ENV: production
+
 jobs:
   build:
 
@@ -24,4 +27,5 @@ jobs:
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      - run: npm test
+      - run: npm run lint
+      - run: npm run
