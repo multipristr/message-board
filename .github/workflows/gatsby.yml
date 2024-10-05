@@ -28,3 +28,5 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run-script build
+      - name: Build the Docker image
+        run: docker image build . --platform linux/amd64

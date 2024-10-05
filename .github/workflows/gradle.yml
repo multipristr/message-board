@@ -26,3 +26,5 @@ jobs:
         uses: gradle/actions/setup-gradle@v4.1.0
       - name: Execute Gradle 'test' task
         run: ./gradlew test
+      - name: Build the Docker image
+        run: docker image build . --platform linux/amd64
