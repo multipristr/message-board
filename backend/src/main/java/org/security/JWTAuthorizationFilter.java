@@ -28,7 +28,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     public static final byte[] JWT_SECRET = "FaC2PTazv3whh$JmxwNrNnXly75jEMwRX1vLg^EDWC8&c1E7pl*FOs#Ljil&QU$Fafvb#sS!o0CF1V*y@enQhb$n!$7%jKYapnVg".getBytes(StandardCharsets.UTF_8);
     public static final String JWT_ROLES = "authorities";
 
-    private final String HEADER_PREFIX = "Bearer ";
+    private static final String HEADER_PREFIX = "Bearer ";
+
+    public static SecretKey getSignInKey() {
+        return Keys.hmacShaKeyFor(JWT_SECRET);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -60,10 +64,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         Collection<String> roles = (Collection<String>) claims.get(JWT_ROLES, Collection.class);
         return new UsernamePasswordAuthenticationToken(claims.getSubject(), null, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
-    }
-
-    public static SecretKey getSignInKey() {
-        return Keys.hmacShaKeyFor(JWT_SECRET);
     }
 
 }
