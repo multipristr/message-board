@@ -7,7 +7,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.repository.IMessageRepository;
 import org.repository.IUserRepository;
-import org.repository.InMemoryMessageRepository;
 import org.repository.InMemoryUserRepository;
 import org.repository.Neo4jMessageRepository;
 import org.springframework.beans.factory.annotation.Value;

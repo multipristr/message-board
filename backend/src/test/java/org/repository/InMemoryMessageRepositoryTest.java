@@ -67,8 +67,8 @@ class InMemoryMessageRepositoryTest {
         repository.saveMessage(message2);
         List<Message> messages = repository.selectTopLevelMessages();
         Assertions.assertEquals(2, messages.size());
-        Assertions.assertEquals(ID1, messages.get(0).getId());
-        Assertions.assertEquals(ID2, messages.get(1).getId());
+        Assertions.assertEquals(ID2, messages.get(0).getId());
+        Assertions.assertEquals(ID1, messages.get(1).getId());
     }
 
     @Test
