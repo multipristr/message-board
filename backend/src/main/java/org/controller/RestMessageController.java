@@ -70,6 +70,7 @@ public class RestMessageController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully fetched all under parent ID messages"),
+            @ApiResponse(responseCode = "401", description = "Not logged in"),
     })
     @GetMapping(value = "{parentId}/children", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MessageResponses.Message> getAllChildMessages(@PathVariable UUID parentId) {
@@ -78,6 +79,7 @@ public class RestMessageController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully fetched all top level messages"),
+            @ApiResponse(responseCode = "401", description = "Not logged in"),
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MessageResponses.Message> getAllTopLevelMessages() {
