@@ -16,7 +16,9 @@ public interface IMessageRepository {
 
     Optional<Message> selectOneMessage(UUID id);
 
-    List<Message> selectTopLevelMessages();
+    default List<Message> selectTopLevelMessages() {
+        return selectChildMessages(null);
+    }
 
     List<Message> selectChildMessages(UUID parentId);
 

@@ -4,17 +4,17 @@ import org.exception.DuplicateIdException;
 import org.model.Message;
 
 import java.time.Instant;
-import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class InMemoryMessageRepository implements IMessageRepository {
 
-    private final Map<UUID, Message> database = new ConcurrentHashMap<>();
+    private final Map<UUID, Message> database = new LinkedHashMap<>();
 
     @Override
     public Message saveMessage(Message message) {
@@ -53,18 +53,9 @@ public class InMemoryMessageRepository implements IMessageRepository {
     }
 
     @Override
-    public List<Message> selectTopLevelMessages() {
-        return database.values().stream()
-                .filter(message -> message.getParentId() == null)
-                .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<Message> selectChildMessages(UUID parentId) {
         return database.values().stream()
-                .filter(message -> parentId.equals(message.getParentId()))
-                .sorted(Comparator.comparing(Message::getCreatedAt))
+                .filter(message -> Objects.equals(parentId, message.getParentId()))
                 .collect(Collectors.toList());
     }
 
