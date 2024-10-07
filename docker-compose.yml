@@ -1,4 +1,4 @@
-version: '3.8'
+name: message-board
 
 services:
   message-board-backend:
@@ -29,7 +29,7 @@ services:
       - frontend
 
   neo4j:
-    image: neo4j:3.5.28-community
+    image: neo4j:3.5.35-community
     ports:
       - "7687:7687" #Bolt
       - "7474:7474" #HTTP
