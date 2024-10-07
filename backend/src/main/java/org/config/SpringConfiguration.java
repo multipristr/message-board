@@ -36,8 +36,8 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public IMessageRepository messageRepository() {
-        return new InMemoryMessageRepository();
+    public IMessageRepository messageRepository(DataSource neo4j) {
+        return new Neo4jMessageRepository(neo4j);
     }
 
     @Bean
