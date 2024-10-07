@@ -31,7 +31,7 @@ class DefaultMessageServiceTest {
     @Test
     void createMessageTopLevel() {
         MessageResponses.Message message1 = messageService.createMessage(new MessageRequests.Create().setContent("content1"));
-        List<MessageResponses.Message> childMessages = messageService.getAllChildMessages(null);
+        List<MessageResponses.Message> childMessages = messageService.getAllTopLevelMessages();
         Assertions.assertEquals(1, childMessages.size());
         MessageResponses.Message actual = childMessages.get(0);
         Assertions.assertEquals(message1.getId(), actual.getId());
@@ -70,13 +70,13 @@ class DefaultMessageServiceTest {
     void modifyMessageContent() {
         MessageResponses.Message message = messageService.createMessage(new MessageRequests.Create().setContent("content"));
 
-        List<MessageResponses.Message> beforeMessages = messageService.getAllChildMessages(null);
+        List<MessageResponses.Message> beforeMessages = messageService.getAllTopLevelMessages();
         Assertions.assertEquals(1, beforeMessages.size());
         Instant beforeModificationTimestamp = beforeMessages.get(0).getLastModifiedAt();
 
         messageService.modifyMessage(message.getId(), new MessageRequests.Patch().setContent("new content"));
 
-        List<MessageResponses.Message> afterMessages = messageService.getAllChildMessages(null);
+        List<MessageResponses.Message> afterMessages = messageService.getAllTopLevelMessages();
         Assertions.assertEquals(1, afterMessages.size());
         MessageResponses.Message afterMessage = afterMessages.get(0);
 
@@ -106,7 +106,7 @@ class DefaultMessageServiceTest {
     void deleteMessageNoReplies() {
         MessageResponses.Message message = messageService.createMessage(new MessageRequests.Create().setContent("content"));
         messageService.deleteMessage(message.getId());
-        List<MessageResponses.Message> topLevelMessages = messageService.getAllChildMessages(null);
+        List<MessageResponses.Message> topLevelMessages = messageService.getAllTopLevelMessages();
         Assertions.assertTrue(topLevelMessages.isEmpty());
     }
 

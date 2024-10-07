@@ -7,7 +7,6 @@ import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,10 +53,18 @@ public class InMemoryMessageRepository implements IMessageRepository {
     }
 
     @Override
+    public List<Message> selectTopLevelMessages() {
+        return database.values().stream()
+                .filter(message -> message.getParentId() == null)
+                .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Message> selectChildMessages(UUID parentId) {
         return database.values().stream()
-                .filter(message -> Objects.equals(parentId, message.getParentId()))
-                .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
+                .filter(message -> parentId.equals(message.getParentId()))
+                .sorted(Comparator.comparing(Message::getCreatedAt))
                 .collect(Collectors.toList());
     }
 
