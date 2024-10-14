@@ -27,12 +27,10 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 }
 
-springBoot {
-    mainClass.set("org.SpringBootMainClass")
-}
-
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
+tasks {
+    test {                                  
+        useJUnitPlatform()
+    }
 }
 
 java {
