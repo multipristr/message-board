@@ -24,7 +24,7 @@ jobs:
           distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4.1.0
-      - name: Execute Gradle 'test' task
-        run: ./gradlew test
+      - name: Execute Gradle 'check' task
+        run: ./gradlew check
       - name: Build the Docker image
         run: docker image build . --platform linux/amd64
