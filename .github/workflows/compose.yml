@@ -18,8 +18,11 @@ jobs:
     uses: multipristr/message-board/.github/workflows/gatsby.yml@main
 
   compose:
+
     runs-on: ubuntu-24.04
     needs: [ backend, frontend ]
+
     steps:
+      - uses: actions/checkout@v4.2.0
       - name: Compose Docker services
         run: docker compose build
