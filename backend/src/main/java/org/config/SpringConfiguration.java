@@ -3,8 +3,11 @@ package org.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.repository.IMessageRepository;
 import org.repository.IUserRepository;
 import org.repository.InMemoryUserRepository;
@@ -48,7 +51,18 @@ public class SpringConfiguration {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info().title("Message board API")
-                        .version("1.1"));
+                        .version("1.1"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new Components()
+                        .addSecuritySchemes(
+                                "bearerAuth", new SecurityScheme()
+                                        .name("bearerAuth")
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .bearerFormat("JWT")
+                                        .in(SecurityScheme.In.HEADER)
+                                        .scheme("bearer")
+                        )
+                );
     }
 
     @Bean
