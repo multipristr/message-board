@@ -6,6 +6,10 @@ on:
       - main
   pull_request:
 
+defaults:
+  run:
+    working-directory: .
+
 jobs:
   backend:
     uses: multipristr/message-board/.github/workflows/gradle.yml@main
