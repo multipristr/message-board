@@ -20,12 +20,15 @@ jobs:
           java-version: '8.0.432'
           distribution: 'zulu'
           cache: 'gradle'
-          cache-dependency-path: |
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4.1.0
       - name: Execute Gradle 'check' task
         run: ./gradlew check
-      - name: Build the Docker image
-        run: docker image build . --platform linux/amd64
+      - name: Set up Docker CLI
+        uses: docker/setup-buildx-action@v3.7.1
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v6.9.0
+        with:
+          context: "{{defaultContext}}:backend"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
