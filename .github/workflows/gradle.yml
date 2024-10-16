@@ -20,6 +20,9 @@ jobs:
           java-version: '8.0.432'
           distribution: 'zulu'
           cache: 'gradle'
+          cache-dependency-path: |
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4.1.0
       - name: Execute Gradle 'check' task
