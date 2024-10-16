@@ -1,0 +1,21 @@
+name: Message Board CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  backend:
+    uses: multipristr/message-board/.github/workflows/gradle.yml@main
+
+  frontend:
+    uses: multipristr/message-board/.github/workflows/gatsby.yml@main
+
+  compose:
+    runs-on: ubuntu-24.04
+    needs: [ backend, frontend ]
+    steps:
+      - name: Compose Docker services
+        run: docker compose build
