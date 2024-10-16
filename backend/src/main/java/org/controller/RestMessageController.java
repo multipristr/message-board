@@ -2,6 +2,7 @@ package org.controller;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.controller.request.MessageRequests;
 import org.controller.response.MessageResponses;
 import org.service.MessageService;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("messages")
+@SecurityRequirement(name = "bearerAuth")
 public class RestMessageController {
 
     private final MessageService service;

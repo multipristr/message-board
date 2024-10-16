@@ -33,7 +33,7 @@ cd frontend && npm install && npm run develop
 ```shell
 cd backend && ./gradlew build
 ```
-4. run Java application with main class [SpringBootMainClass](backend/src/main/java/org/SpringBootMainClass.java)
+4. run Java application with main class [MessageBoardApplication](backend/src/main/java/org/MessageBoardApplication.java)
 
 ## Disabling Neo4J
 You can change Neo4J repository to Java map backed repository by changing `@Bean Neo4jMessageRepository` to `@Bean InMemoryMessageRepository` in [SpringConfiguration.java](backend/src/main/java/org/config/SpringConfiguration.java)

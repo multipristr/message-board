@@ -18,10 +18,10 @@ import org.springframework.context.annotation.Import;
 })
 @Import(SpringConfiguration.class)
 @ComponentScan(basePackages = {"org.controller", "org.service", "org.repository", "org.security"})
-public class SpringBootMainClass {
+public class MessageBoardApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootMainClass.class, args);
+        SpringApplication.run(MessageBoardApplication.class, args);
     }
 
 }
