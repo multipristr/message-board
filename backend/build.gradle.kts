@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.messages"
-version = "1.1"
+version = "1.0"
 
 repositories {
     mavenCentral()
