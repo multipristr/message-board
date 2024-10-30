@@ -4,7 +4,7 @@ WORKDIR /home/gradle/src
 
 COPY . /home/gradle/src
 RUN chmod +x gradlew
-RUN --mount=type=cache,target=/root/.gradle ./gradlew clean build --parallel --configure-on-demand --no-watch-fs --no-daemon --no-build-cache --refresh-dependencies --no-configuration-cache
+RUN --mount=type=cache,target=/root/.gradle ./gradlew clean build --no-watch-fs --no-daemon --no-build-cache --refresh-dependencies --no-configuration-cache
 
 FROM openjdk:8-jre-slim
 
