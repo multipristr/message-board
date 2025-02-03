@@ -12,7 +12,7 @@ It should support the following features:
 ## Running the solution
 Clone and run the solution in Docker compose by executing
 ```shell
-git clone https://github.com/hamsatom-psql/message-board.git && cd message-board && docker compose up
+git clone https://github.com/multipristr/message-board.git && cd message-board && docker compose up
 ```
 UI is running on [localhost:8000](http://localhost:8000)  
 There's Swagger running at [localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)  

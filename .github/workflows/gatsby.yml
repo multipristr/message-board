@@ -16,19 +16,19 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4.2.1
+      - uses: actions/checkout@v4.2.2
       - name: Setup node 16
-        uses: actions/setup-node@v4.0.4
+        uses: actions/setup-node@v4.2.0
         with:
-          node-version: 16.3.0
+          node-version: 16.20.2
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run-script build
       - name: Set up Docker CLI
-        uses: docker/setup-buildx-action@v3.7.1
+        uses: docker/setup-buildx-action@v3.8.0
       - name: Build and push Docker images
-        uses: docker/build-push-action@v6.9.0
+        uses: docker/build-push-action@v6.19.0
         with:
           context: "{{defaultContext}}:frontend"
           cache-from: type=gha
