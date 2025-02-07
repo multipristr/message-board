@@ -3,10 +3,10 @@ ENV NODE_ENV=production
 
 ADD package.json package-lock.json /app/
 WORKDIR /app
-RUN npm install --production
+RUN npm install --omit=dev
 ADD . /app
 RUN ["npm", "run", "build"]
 
-FROM nginx:1.27.3-alpine3.20
+FROM nginx:1.27.4-alpine3.21
 EXPOSE 80
 COPY --from=builder /app/public /usr/share/nginx/html

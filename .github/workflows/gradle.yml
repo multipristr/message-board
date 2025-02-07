@@ -28,7 +28,7 @@ jobs:
       - name: Execute Gradle 'check' task
         run: ./gradlew check --continue --no-daemon --no-watch-fs
       - name: Set up Docker CLI
-        uses: docker/setup-buildx-action@v3.8.0
+        uses: docker/setup-buildx-action@v3.9.0
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.13.0
         with:
