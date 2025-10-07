@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
 
 jobs:
   backend:
@@ -15,7 +16,7 @@ jobs:
 
   compose:
 
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [ backend, frontend ]
 
     steps:
