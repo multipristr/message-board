@@ -9,7 +9,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
     const [show, setShow] = useState(true);
     const [replying, setReplying] = useState(false);
 
-    const fetchMessages = useCallback((parentId) => {
+    const fetchMessages = useCallback((parentId = null) => {
         let url = `${SERVER_URL}/messages`
         if (parentId) {
             url += `/${parentId}/children`
