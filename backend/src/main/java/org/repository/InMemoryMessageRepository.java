@@ -4,6 +4,7 @@ import org.exception.DuplicateIdException;
 import org.model.Message;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class InMemoryMessageRepository implements IMessageRepository {
     @Override
     public void deleteMessage(UUID id) {
         database.remove(id);
-        database.values().stream()
+        new ArrayList<>(database.values()).stream()
                 .filter(message -> id.equals(message.getParentId()))
                 .forEach(message -> deleteMessage(message.getId()));
     }
