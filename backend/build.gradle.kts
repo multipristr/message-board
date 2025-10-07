@@ -21,8 +21,8 @@ dependencies {
     implementation("com.zaxxer", "HikariCP", "4.0.3")
     implementation("org.mockito:mockito-core:4.11.0")
     implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
-    implementation("org.slf4j:jcl-over-slf4j:1.7.36")
-    implementation("org.slf4j:log4j-over-slf4j:1.7.36")
+    implementation("org.slf4j:jcl-over-slf4j")
+    implementation("org.slf4j:log4j-over-slf4j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
