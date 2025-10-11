@@ -5,7 +5,8 @@ import org.model.Message;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class InMemoryMessageRepository implements IMessageRepository {
 
-    private final Map<UUID, Message> database = new LinkedHashMap<>();
+    private final Map<UUID, Message> database = new HashMap<>();
 
     @Override
     public Message saveMessage(Message message) {
@@ -54,10 +55,18 @@ public class InMemoryMessageRepository implements IMessageRepository {
     }
 
     @Override
-    public List<Message> selectChildMessages(UUID parentId) {
+    public List<Message> selectTopLevelMessages() {
         return database.values().stream()
-                .filter(message -> Objects.equals(parentId, message.getParentId()))
+                .filter(message -> message.getParentId() == null)
+                .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Message> selectChildMessages(UUID parentId) {
+        return database.values().stream()
+                .filter(message -> Objects.equals(parentId, message.getParentId()))
+                .sorted(Comparator.comparing(Message::getCreatedAt))
+                .collect(Collectors.toList());
+    }
 }
