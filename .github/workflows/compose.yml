@@ -9,10 +9,10 @@ on:
 
 jobs:
   backend:
-    uses: multipristr/message-board/.github/workflows/gradle.yml@main
+    uses: ./.github/workflows/gradle.yml
 
   frontend:
-    uses: multipristr/message-board/.github/workflows/gatsby.yml@main
+    uses: ./.github/workflows/gatsby.yml
 
   compose:
 
