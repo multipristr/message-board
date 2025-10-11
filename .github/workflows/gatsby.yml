@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
       - name: Setup node 16
-        uses: actions/setup-node@v4.2.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version: 16.20.2
           cache: 'npm'
@@ -26,9 +26,9 @@ jobs:
       - run: npm ci
       - run: npm run-script build
       - name: Set up Docker CLI
-        uses: docker/setup-buildx-action@v3.9.0
+        uses: docker/setup-buildx-action@v3.11.1
       - name: Build and push Docker images
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: "{{defaultContext}}:frontend"
           cache-from: type=gha

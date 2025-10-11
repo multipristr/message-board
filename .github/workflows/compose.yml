@@ -20,6 +20,6 @@ jobs:
     needs: [ backend, frontend ]
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
       - name: Compose Docker services
         run: docker compose build
