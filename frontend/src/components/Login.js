@@ -41,7 +41,7 @@ const passwordStyle = {
 
 const usernameLabelStyle = {
     gridArea: "usernameLabel",
-    alignSelf: "end",
+    alignSelf: "center",
     justifySelf: "start",
     height: "2em",
     width: "100%",
@@ -49,7 +49,7 @@ const usernameLabelStyle = {
 
 const passwordLabelStyle = {
     gridArea: "passwordLabel",
-    alignSelf: "end",
+    alignSelf: "center",
     justifySelf: "start",
     height: "2em",
     width: "100%",
@@ -62,6 +62,7 @@ const loginStyle = {
     height: "2em",
     width: "100%",
     border: "0",
+    borderRadius: 4,
 }
 
 const registerStyle = {
@@ -71,6 +72,7 @@ const registerStyle = {
     height: "2em",
     width: "100%",
     border: "0",
+    borderRadius: 4,
 }
 
 const failStyle = {

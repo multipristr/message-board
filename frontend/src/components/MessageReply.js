@@ -2,7 +2,7 @@ import * as React from "react";
 
 const repliesStyle = {
     gridArea: "replies",
-    alignSelf: "start",
+    alignSelf: "center",
     justifySelf: "start",
     maxWidth: "100%",
     minWidth: "0",
@@ -10,7 +10,7 @@ const repliesStyle = {
 
 const replyStyle = {
     gridArea: "reply",
-    alignSelf: "end",
+    alignSelf: "center",
     justifySelf: "end",
     maxWidth: "100%",
     minWidth: "0",

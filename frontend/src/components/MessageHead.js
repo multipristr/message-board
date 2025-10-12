@@ -2,7 +2,7 @@ import * as React from "react";
 
 const headStyle = {
     gridArea: "head",
-    alignSelf: "start",
+    alignSelf: "center",
     justifySelf: "start",
     maxWidth: "100%",
     minWidth: "0",

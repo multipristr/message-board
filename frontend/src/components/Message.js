@@ -9,16 +9,16 @@ import ContentEditable from "react-contenteditable";
 const messageStyle = {
     display: "grid",
     grid: `
-                    "head . buttons" auto
+                    "head . buttons" 1fr
                     "content content content" auto
-                    "replies . reply" auto             
-                / auto auto
+                    "replies . reply" 1fr             
+                / 2fr  auto  1fr 
                 `,
     height: "100%",
     backgroundColor: "black",
     color: "white",
     marginTop: "0.2%",
-    padding: "0.2%",
+    padding: "0.5%",
 }
 
 const modifiersStyle = {
@@ -34,7 +34,6 @@ const contentStyle = {
     alignSelf: "start",
     justifySelf: "start",
     width: "100%",
-    height: "100%",
 }
 
 const deleteMessage = (id) => fetch(`${SERVER_URL}/messages/${id}`, {
