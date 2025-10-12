@@ -71,7 +71,13 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                     <MessageList
                         message={message}
                         level={level + 1}
-                        deleteHierarchy={() => setMessages(messages.filter(mes => mes.id !== message.id))}
+                        deleteHierarchy={() => {
+                            const remainingMessages = messages.filter(mes => mes.id !== message.id)
+                            setMessages(remainingMessages)
+                            if (!remainingMessages.length) {
+                                setShow(true)
+                            }
+                        }}
                         key={message.id}
                     />
                 );
