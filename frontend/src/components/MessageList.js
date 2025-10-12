@@ -9,7 +9,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
     const [show, setShow] = useState(true);
     const [replying, setReplying] = useState(false);
 
-    const fetchMessages = useCallback((parentId) => {
+    const fetchMessages = useCallback((parentId = null) => {
         let url = `${SERVER_URL}/messages`
         if (parentId) {
             url += `/${parentId}/children`
@@ -44,7 +44,9 @@ const MessageList = ({message, level, deleteHierarchy}) => {
         fetchMessages(message?.id)
     }, [fetchMessages, message])
 
-    const addReply = useCallback(() => setReplying(true), []);
+    const addReply = useCallback(() => {
+        setReplying(!replying)
+    }, [replying]);
 
     return (
         <article style={{paddingLeft: `${level}%`}}>
@@ -56,6 +58,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                 <Message
                     operateReplies={show ? fetchMessages : hideMessages}
                     show={show}
+                    replying={replying}
                     addReply={addReply}
                     deleteHierarchy={deleteHierarchy}
                     id={message.id}
@@ -71,7 +74,13 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                     <MessageList
                         message={message}
                         level={level + 1}
-                        deleteHierarchy={() => setMessages(messages.filter(mes => mes.id !== message.id))}
+                        deleteHierarchy={() => {
+                            const remainingMessages = messages.filter(mes => mes.id !== message.id)
+                            setMessages(remainingMessages)
+                            if (!remainingMessages.length) {
+                                setShow(true)
+                            }
+                        }}
                         key={message.id}
                     />
                 );

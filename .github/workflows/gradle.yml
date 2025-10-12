@@ -10,27 +10,23 @@ defaults:
 jobs:
   build:
 
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
       - name: Set up JDK 8
-        uses: actions/setup-java@v4.7.0
+        uses: actions/setup-java@v5.0.0
         with:
-          java-version: '8.0.442'
-          distribution: 'zulu'
-          cache: 'gradle'
-          cache-dependency-path: |
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+          java-version: '8.0.462'
+          distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4.3.0
+        uses: gradle/actions/setup-gradle@v5.0.0
       - name: Execute Gradle 'check' task
         run: ./gradlew check --continue --no-daemon --no-watch-fs
       - name: Set up Docker CLI
-        uses: docker/setup-buildx-action@v3.9.0
+        uses: docker/setup-buildx-action@v3.11.1
       - name: Build and push Docker images
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: "{{defaultContext}}:backend"
           cache-from: type=gha

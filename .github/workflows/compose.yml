@@ -5,20 +5,21 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
 
 jobs:
   backend:
-    uses: multipristr/message-board/.github/workflows/gradle.yml@main
+    uses: ./.github/workflows/gradle.yml
 
   frontend:
-    uses: multipristr/message-board/.github/workflows/gatsby.yml@main
+    uses: ./.github/workflows/gatsby.yml
 
   compose:
 
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [ backend, frontend ]
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
       - name: Compose Docker services
         run: docker compose build

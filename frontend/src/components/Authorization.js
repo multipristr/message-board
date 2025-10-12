@@ -23,7 +23,7 @@ export const setJwt = (token, afterExpiring) => {
         if (getAuthorization() === undefined) {
             afterExpiring()
         }
-    }, expiryDate - Date.now() + 2000);
+    }, Math.max(expiryDate - Date.now(), 0));
 }
 
 export const clearAuthorization = () => {
