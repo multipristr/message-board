@@ -55,7 +55,7 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/messages/${id}`, {
     body: JSON.stringify({content: content})
 })
 
-const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
+const Message = ({id, author, createdAt, lastModifiedAt, content, show, replying, operateReplies, addReply, deleteHierarchy}) => {
     const contentRef = useRef(content)
     const [originalContent, setOriginalContent] = useState(content)
     const areaRef = useRef(null)
@@ -107,7 +107,8 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             <ContentEditable style={contentStyle} html={contentRef.current} tagName="p" disabled={!isModifying}
                              innerRef={areaRef}
                              onChange={event => contentRef.current = event.target.value}/>
-            <MessageReply onClickReplies={() => operateReplies(id)} show={show} onClickReply={addReply}/>
+            <MessageReply onClickReplies={() => operateReplies(id)} show={show} replying={replying}
+                          onClickReply={addReply}/>
         </section>
     )
 }

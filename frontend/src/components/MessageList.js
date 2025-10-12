@@ -44,7 +44,9 @@ const MessageList = ({message, level, deleteHierarchy}) => {
         fetchMessages(message?.id)
     }, [fetchMessages, message])
 
-    const addReply = useCallback(() => setReplying(true), []);
+    const addReply = useCallback(() => {
+        setReplying(!replying)
+    }, [replying]);
 
     return (
         <article style={{paddingLeft: `${level}%`}}>
@@ -56,6 +58,7 @@ const MessageList = ({message, level, deleteHierarchy}) => {
                 <Message
                     operateReplies={show ? fetchMessages : hideMessages}
                     show={show}
+                    replying={replying}
                     addReply={addReply}
                     deleteHierarchy={deleteHierarchy}
                     id={message.id}

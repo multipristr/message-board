@@ -16,10 +16,10 @@ const replyStyle = {
     minWidth: "0",
 }
 
-const MessageReply = ({show, onClickReplies, onClickReply}) => {
+const MessageReply = ({show, replying, onClickReplies, onClickReply}) => {
     return <>
         <button style={repliesStyle} onClick={onClickReplies}>{show ? "Show" : "Hide"} replies</button>
-        <button style={replyStyle} onClick={onClickReply}>Reply</button>
+        <button style={replyStyle} onClick={onClickReply}>{replying ? "Stop replying" : "Reply"}</button>
     </>;
 }
 
