@@ -28,7 +28,7 @@ const AddMessage = ({level, parentId, afterReply}) => {
     const addStyle = level > 0 ? {...areaStyle, marginLeft: `${level}%`} : areaStyle
     return (
         <div style={addStyle}>
-            <textarea ref={ref} rows={4} placeholder="New message ..." required={true}/>
+            <textarea ref={ref} rows={4} placeholder="New message ..." required={true} autoFocus={true}/>
             <button onClick={() =>
                 createMessage(parentId, ref.current.value)
                     .then(() => ref.current.value = "")

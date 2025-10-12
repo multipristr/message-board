@@ -1,5 +1,5 @@
 import * as React from "react"
-import {useRef, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {SERVER_URL} from "../config";
 import {getAuthorization, getUser} from "./Authorization";
 import MessageHead from "./MessageHead";
@@ -57,8 +57,16 @@ const modifyMessage = (id, content) => fetch(`${SERVER_URL}/messages/${id}`, {
 
 const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateReplies, addReply, deleteHierarchy}) => {
     const contentRef = useRef(content)
+    const [originalContent, setOriginalContent] = useState(content)
+    const areaRef = useRef(null)
     const [isModifying, setModifying] = useState(false)
     const [modifiedTimestamp, setModifiedTimeStamp] = useState(lastModifiedAt)
+
+    useEffect(() => {
+        if (isModifying) {
+            areaRef.current.focus();
+        }
+    }, [isModifying]);
 
     return (
         <section style={messageStyle}>
@@ -67,10 +75,17 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             <div style={modifiersStyle}>
                 <button onClick={() => {
                     if (isModifying) {
-                        modifyMessage(id, contentRef.current)
-                            .then(response => response.json())
-                            .then(message => setModifiedTimeStamp(message.lastModifiedAt))
-                            .then(() => setModifying(false))
+                        if (contentRef.current === originalContent) {
+                            setModifying(false)
+                        } else {
+                            modifyMessage(id, contentRef.current)
+                                .then(response => response.json())
+                                .then(message => {
+                                    setModifiedTimeStamp(message.lastModifiedAt)
+                                    setOriginalContent(message.content)
+                                })
+                                .then(() => setModifying(false))
+                        }
                     } else {
                         setModifying(true)
                     }
@@ -90,6 +105,7 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, operateR
             </div>
             }
             <ContentEditable style={contentStyle} html={contentRef.current} tagName="p" disabled={!isModifying}
+                             innerRef={areaRef}
                              onChange={event => contentRef.current = event.target.value}/>
             <MessageReply onClickReplies={() => operateReplies(id)} show={show} onClickReply={addReply}/>
         </section>
