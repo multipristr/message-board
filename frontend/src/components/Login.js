@@ -132,7 +132,7 @@ const Login = ({afterLogin}) => {
 
             <input style={loginStyle} type="submit" data-inline="true" value="Log In" onClick={logIn}/>
             <input style={registerStyle} type="submit" data-inline="true" value="Register" onClick={register}/>
-            <strong style={failStyle}>{fail}</strong>
+            {fail && <strong style={failStyle}>{fail}</strong>}
         </form>
     )
 }
