@@ -2,6 +2,8 @@
 
 ![build](https://github.com/multipristr/message-board/actions/workflows/compose.yml/badge.svg)
 
+[https://multipristr.github.io/message-board/](https://multipristr.github.io/message-board/)
+
 ## A RESTful API to serve as the backend for a public message board
 It should support the following features: 
 - A client can create a message in the service
