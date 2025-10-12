@@ -21,6 +21,7 @@ concurrency:
 
 env:
   NODE_ENV: production
+  GATSBY_API_URL: 'https://message-board-nnel.onrender.com'
 
 jobs:
   build:
