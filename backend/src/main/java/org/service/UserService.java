@@ -57,7 +57,7 @@ public class UserService {
                 .subject(login)
                 .claim(JWTAuthorizationFilter.JWT_ROLES, Collections.singletonList("ROLE_USER"))
                 .issuedAt(new Date())
-                .expiration(Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)))
+                .expiration(Date.from(Instant.now().plus(15, ChronoUnit.MINUTES)))
                 .signWith(JWTAuthorizationFilter.getSignInKey())
                 .compact();
 
