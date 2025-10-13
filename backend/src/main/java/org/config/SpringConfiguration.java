@@ -9,8 +9,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.repository.IMessageRepository;
 import org.repository.IUserRepository;
+import org.repository.InMemoryMessageRepository;
 import org.repository.InMemoryUserRepository;
-import org.repository.Neo4jMessageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +37,8 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public IMessageRepository messageRepository(DataSource neo4j) {
-        return new Neo4jMessageRepository(neo4j);
+    public IMessageRepository messageRepository() {
+        return new InMemoryMessageRepository();
     }
 
     @Bean
