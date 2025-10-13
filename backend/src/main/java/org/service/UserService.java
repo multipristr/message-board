@@ -12,6 +12,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
 
@@ -55,7 +57,7 @@ public class UserService {
                 .subject(login)
                 .claim(JWTAuthorizationFilter.JWT_ROLES, Collections.singletonList("ROLE_USER"))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1_800_000))
+                .expiration(Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)))
                 .signWith(JWTAuthorizationFilter.getSignInKey())
                 .compact();
 
