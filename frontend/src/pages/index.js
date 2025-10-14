@@ -16,11 +16,13 @@ export const Head = () => (
     <>
         <title>Message board</title>
         <meta content="Message board" name="title"/>
+        <meta content="Public message board" name="description"/>
 
         <meta content="summary" name="twitter:card"/>
         <meta content="website" property="og:type"/>
         <meta content="https://multipristr.github.io/message-board/" property="og:url"/>
         <meta content="Message board" property="og:title"/>
+        <meta content="Public message board" property="og:description"/>
         <meta content="" property="og:determiner"/>
         <meta content="en_US" property="og:locale"/>
         <meta content="https://multipristr.github.io/message-board/android-chrome-512x512.png" property="og:image"/>
