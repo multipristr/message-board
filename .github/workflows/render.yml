@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Spin up Render instance
         run: |
-          curl -H 'Content-Type: application/json' -d '{}' https://message-board-nnel.onrender.com/register
+          curl -H 'Content-Type: application/json' -d '{login: "", password: ""}' https://message-board-nnel.onrender.com/register
