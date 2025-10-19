@@ -8,7 +8,9 @@ import {clearAuthorization, getAuthorization, setJwt} from "../components/Author
 const indexStyle = {
     width: "100%",
     height: "100%",
-    padding: "0.2%",
+    paddingTop: "0.2%",
+    paddingLeft: "0.2%",
+    paddingRight: "0.2%",
     boxSizing: "border-box",
 }
 
