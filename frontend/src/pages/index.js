@@ -12,6 +12,8 @@ const indexStyle = {
     paddingLeft: "0.2%",
     paddingRight: "0.2%",
     boxSizing: "border-box",
+    maxWidth: "75ch",
+    justifySelf: "center",
 }
 
 export const Head = () => (
