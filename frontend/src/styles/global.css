@@ -16,9 +16,8 @@ html, body, #___gatsby, #gatsby-focus-wrapper {
     height: 100%;
     width: 100%;
     margin: 0 auto;
-    background-size: 100%;
-    background-color: darkgray;
     transition: all 2s;
+    background: linear-gradient(to right, #2c3e50, #889cb0, #bdc3c7, #889cb0, #2c3e50);
 }
 
 textarea, section {
