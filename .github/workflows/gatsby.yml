@@ -29,11 +29,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.1
       - name: Setup node 24
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
-          node-version: 24.10.0
+          node-version: 24.12.0
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - name: Setup Pages
