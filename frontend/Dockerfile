@@ -1,4 +1,4 @@
-FROM node:24.10.0-alpine3.22 as builder
+FROM node:24.12.0-alpine3.23 as builder
 ENV NODE_ENV=production
 
 ADD package.json package-lock.json /app/
