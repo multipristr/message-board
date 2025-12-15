@@ -19,21 +19,21 @@ const indexStyle = {
 export const Head = () => (
     <>
         <title>Message board</title>
-        <meta content="Message board" name="title"/>
-        <meta content="Public message board" name="description"/>
+        <meta name="title" content="Message board"/>
+        <meta name="description" content="Public message board"/>
 
-        <meta content="summary" name="twitter:card"/>
-        <meta content="website" property="og:type"/>
-        <meta content="https://multipristr.github.io/message-board/" property="og:url"/>
-        <meta content="Message board" property="og:title"/>
-        <meta content="Public message board" property="og:description"/>
-        <meta content="" property="og:determiner"/>
-        <meta content="en_US" property="og:locale"/>
-        <meta content="https://multipristr.github.io/message-board/android-chrome-512x512.png" property="og:image"/>
-        <meta content="https://multipristr.github.io/message-board/android-chrome-512x512.png" property="og:image:secure_url"/>
-        <meta content="image/png" property="og:image:type"/>
-        <meta content="512" property="og:image:width"/>
-        <meta content="512" property="og:image:height"/>
+        <meta property="og:image" content="https://multipristr.github.io/message-board/android-chrome-512x512.png"/>
+        <meta property="og:image:secure_url" content="https://multipristr.github.io/message-board/android-chrome-512x512.png"/>
+        <meta property="og:image:width" content="512"/>
+        <meta property="og:image:height" content="512"/>
+        <meta property="og:image:type" content="image/png"/>
+        <meta property="og:image:alt" content="Public message board"/>
+        <meta name="twitter:card" content="summary"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Message board"/>
+        <meta property="og:description" content="Public message board"/>
+        <meta property="og:url" content="https://multipristr.github.io/message-board/"/>
+        <meta property="og:locale" content="en_US"/>
 
         <link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
         <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
