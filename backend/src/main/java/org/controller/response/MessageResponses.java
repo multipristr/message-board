@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
-public class MessageResponses {
+public final class MessageResponses {
 
     private MessageResponses() throws IllegalAccessException {
         throw new IllegalAccessException("Single instance protection");

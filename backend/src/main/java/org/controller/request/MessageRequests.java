@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class MessageRequests {
+public final class MessageRequests {
 
     private MessageRequests() throws IllegalAccessException {
         throw new IllegalAccessException("Single instance protection");

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 
-public class UserRequests {
+public final class UserRequests {
 
     private UserRequests() throws IllegalAccessException {
         throw new IllegalAccessException("Single instance protection");
