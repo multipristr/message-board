@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:experimental
-FROM eclipse-temurin:8u462-b08-jdk-jammy AS build
+FROM eclipse-temurin:8u482-b08-jdk-jammy AS build
 WORKDIR /home/gradle/src
 
 COPY . /home/gradle/src
 RUN chmod +x gradlew
 RUN --mount=type=cache,target=/root/.gradle ./gradlew clean build --no-watch-fs --no-daemon --no-build-cache --refresh-dependencies --no-configuration-cache
 
-FROM eclipse-temurin:8u462-b08-jre-jammy
+FROM eclipse-temurin:8u482-b08-jre-jammy
 
 EXPOSE 8080
 
