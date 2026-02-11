@@ -28,12 +28,16 @@ const AddMessage = ({level, parentId, afterReply}) => {
     const addStyle = level > 0 ? {...areaStyle, marginLeft: `${level}%`} : areaStyle
     return (
         <div style={addStyle}>
-            <textarea ref={ref} rows={4} placeholder="New message ..." required={true} autoFocus={true}/>
-            <button onClick={() =>
-                createMessage(parentId, ref.current.value)
-                    .then(() => ref.current.value = "")
-                    .then(afterReply)
-            }>
+            <textarea ref={ref} rows={4} placeholder="New message ..." required={true} autoFocus={true} minLength={1}
+                      maxLength={2_000}/>
+            <button onClick={() => {
+                const content = ref.current.value.trim()
+                if (content.length && content.length <= 2_000) {
+                    createMessage(parentId, content)
+                        .then(() => ref.current.value = "")
+                        .then(afterReply)
+                }
+            }}>
                 Post
             </button>
         </div>

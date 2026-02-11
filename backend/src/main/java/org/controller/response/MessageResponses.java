@@ -20,11 +20,11 @@ public final class MessageResponses {
         private UUID id;
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private Instant createdAt;
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 63, requiredMode = Schema.RequiredMode.REQUIRED)
         private String author;
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private Instant lastModifiedAt;
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 2_000, requiredMode = Schema.RequiredMode.REQUIRED)
         private String content;
 
         public UUID getId() {

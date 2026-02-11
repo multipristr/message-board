@@ -8,6 +8,9 @@ import org.exception.MissingEntityException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.repository.InMemoryMessageRepository;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-class DefaultMessageServiceTest {
+class MessageServiceTest {
     private static final String TEST_USER = "testUser";
     private MessageService messageService;
 
@@ -26,6 +29,11 @@ class DefaultMessageServiceTest {
     void setUp() {
         messageService = new MessageService(new InMemoryMessageRepository());
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(TEST_USER, null, Collections.emptyList()));
+    }
+
+    private static List<String> longContentProvider() {
+        String longContent = String.join("", Collections.nCopies(2_001, "1"));
+        return Collections.singletonList(longContent);
     }
 
     @Test
@@ -61,9 +69,11 @@ class DefaultMessageServiceTest {
         Assertions.assertThrows(BadCredentialsException.class, () -> messageService.createMessage(new MessageRequests.Create().setContent("content")));
     }
 
-    @Test
-    void createMessageBlankContent() {
-        Assertions.assertThrows(InvalidRequestBodyException.class, () -> messageService.createMessage(new MessageRequests.Create().setContent("")));
+    @ParameterizedTest
+    @NullAndEmptySource
+    @MethodSource("longContentProvider")
+    void createMessageInvalidContent(String content) {
+        Assertions.assertThrows(InvalidRequestBodyException.class, () -> messageService.createMessage(new MessageRequests.Create().setContent(content)));
     }
 
     @Test
@@ -84,10 +94,12 @@ class DefaultMessageServiceTest {
         Assertions.assertFalse(afterMessage.getLastModifiedAt().isBefore(beforeModificationTimestamp));
     }
 
-    @Test
-    void modifyMessageContentBlank() {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @MethodSource("longContentProvider")
+    void modifyMessageContentLong(String content) {
         MessageResponses.Message message = messageService.createMessage(new MessageRequests.Create().setContent("content"));
-        Assertions.assertThrows(InvalidRequestBodyException.class, () -> messageService.modifyMessage(message.getId(), new MessageRequests.Patch().setContent("")));
+        Assertions.assertThrows(InvalidRequestBodyException.class, () -> messageService.modifyMessage(message.getId(), new MessageRequests.Patch().setContent(content)));
     }
 
     @Test

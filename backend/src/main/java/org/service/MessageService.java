@@ -47,7 +47,7 @@ public class MessageService {
 
     public MessageResponses.Message createMessage(MessageRequests.Create messageDto) {
         if (messageDto.isInvalid()) {
-            throw new InvalidRequestBodyException("Empty message content");
+            throw new InvalidRequestBodyException("Invalid message content");
         }
         Message message = new Message().setContent(messageDto.getContent()).setParentId(messageDto.getParentId()).setAuthor(getCurrentUser());
 
@@ -57,7 +57,7 @@ public class MessageService {
 
     public MessageResponses.Message modifyMessage(UUID id, MessageRequests.Patch messageDto) {
         if (messageDto.isInvalid()) {
-            throw new InvalidRequestBodyException("Empty new modified message content in " + id);
+            throw new InvalidRequestBodyException("Invalid new modified message content in " + id);
         }
         Optional<Message> savedMessage = repository.selectOneMessage(id);
         if (!savedMessage.isPresent()) {

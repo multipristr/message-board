@@ -28,8 +28,8 @@ public class RestUserController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully logged id"),
-            @ApiResponse(responseCode = "400", description = "Empty credentials"),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials"),
+            @ApiResponse(responseCode = "400", description = "Invalid credentials"),
+            @ApiResponse(responseCode = "401", description = "Incorrect credentials"),
     })
     @PermitAll
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,8 +39,8 @@ public class RestUserController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successfully registered"),
+            @ApiResponse(responseCode = "400", description = "Invalid credentials"),
             @ApiResponse(responseCode = "409", description = "Login already taken"),
-            @ApiResponse(responseCode = "400", description = "Empty credentials"),
     })
     @PermitAll
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)

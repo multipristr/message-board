@@ -37,7 +37,7 @@ public class RestMessageController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successfully created message"),
-            @ApiResponse(responseCode = "400", description = "Empty message content"),
+            @ApiResponse(responseCode = "400", description = "Invalid message content"),
             @ApiResponse(responseCode = "401", description = "Not logged in"),
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -48,7 +48,7 @@ public class RestMessageController {
 
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully modified message, attached updated modified timestamp"),
-            @ApiResponse(responseCode = "400", description = "Empty message content"),
+            @ApiResponse(responseCode = "400", description = "Invalid message content"),
             @ApiResponse(responseCode = "401", description = "Not logged in"),
             @ApiResponse(responseCode = "403", description = "Action not permitted for the user"),
             @ApiResponse(responseCode = "404", description = "No Message with the provided ID"),
