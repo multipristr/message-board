@@ -12,9 +12,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 abstract class IMessageRepositoryTest {
-    private final static UUID ID1 = UUID.randomUUID();
-    private final static UUID ID2 = UUID.randomUUID();
-    private final static UUID ID3 = UUID.randomUUID();
+    private static final UUID ID1 = UUID.randomUUID();
+    private static final UUID ID2 = UUID.randomUUID();
+    private static final UUID ID3 = UUID.randomUUID();
 
     abstract IMessageRepository getRepository();
 

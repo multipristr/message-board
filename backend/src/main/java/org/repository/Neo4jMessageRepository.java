@@ -139,8 +139,9 @@ public class Neo4jMessageRepository implements IMessageRepository {
                      "MATCH (m:Message {id: ?}) RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content"
              )) {
             preparedStatement.setString(1, id.toString());
-            ResultSet result = preparedStatement.executeQuery();
-            return result.next() ? Optional.of(toMessage(result)) : Optional.empty();
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                return result.next() ? Optional.of(toMessage(result)) : Optional.empty();
+            }
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);
         }
@@ -154,8 +155,9 @@ public class Neo4jMessageRepository implements IMessageRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "MATCH (m:Message) WHERE NOT (m)<-[:PARENT_OF]-(:Message) " +
                              "RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content ORDER BY m.createdAt DESC"
-             )) {
-            ResultSet results = preparedStatement.executeQuery();
+             );
+             ResultSet results = preparedStatement.executeQuery()
+        ) {
             while (results.next()) {
                 topLevelMessages.add(toMessage(results));
             }
@@ -176,9 +178,10 @@ public class Neo4jMessageRepository implements IMessageRepository {
                              "RETURN m.id, m.createdAt, m.author, m.lastModifiedAt, m.content ORDER BY m.createdAt"
              )) {
             preparedStatement.setString(1, parentId.toString());
-            ResultSet results = preparedStatement.executeQuery();
-            while (results.next()) {
-                children.add(toMessage(results));
+            try (ResultSet results = preparedStatement.executeQuery()) {
+                while (results.next()) {
+                    children.add(toMessage(results));
+                }
             }
         } catch (SQLException throwables) {
             throw new RuntimeException(throwables);

@@ -19,7 +19,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
     implementation("org.neo4j:neo4j-jdbc-driver:3.5.2")
     implementation("com.zaxxer", "HikariCP", "4.0.3")
-    implementation("org.mockito:mockito-core:4.11.0")
+    implementation("org.mockito:mockito-core")
     implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
     implementation("org.slf4j:jcl-over-slf4j")
     implementation("org.slf4j:log4j-over-slf4j")

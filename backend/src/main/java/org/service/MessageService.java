@@ -7,7 +7,6 @@ import org.exception.InvalidRequestBodyException;
 import org.exception.MissingEntityException;
 import org.model.Message;
 import org.repository.IMessageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,7 +23,6 @@ public class MessageService {
 
     private final IMessageRepository repository;
 
-    @Autowired
     public MessageService(IMessageRepository repository) {
         this.repository = repository;
     }
