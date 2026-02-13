@@ -15,9 +15,11 @@ abstract class IUserRepositoryTest {
     void saveUser() {
         User user = new User().setLogin("login").setPassword("password");
         IUserRepository userRepository = getRepository();
+        Assertions.assertFalse(userRepository.selectOneUser("login").isPresent());
         userRepository.saveUser(user);
         Optional<User> repositoryUser = userRepository.selectOneUser("login");
         Assertions.assertTrue(repositoryUser.isPresent());
+        Assertions.assertEquals("login", repositoryUser.get().getLogin());
         Assertions.assertEquals("password", repositoryUser.get().getPassword());
     }
 
