@@ -1,6 +1,8 @@
 package org.repository;
 
+import org.exception.DuplicateIdException;
 import org.model.Message;
+import org.neo4j.driver.v1.exceptions.Neo4jException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -25,7 +27,7 @@ public class Neo4jMessageRepository implements IMessageRepository {
     private void initSchema() {
         try (
                 Connection connection = neo4j.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("CREATE CONSTRAINT ON (n:Node) ASSERT n.id IS UNIQUE")
+                PreparedStatement preparedStatement = connection.prepareStatement("CREATE CONSTRAINT ON (m:Message) ASSERT m.id IS UNIQUE")
         ) {
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -70,14 +72,15 @@ public class Neo4jMessageRepository implements IMessageRepository {
             }
             connection.commit();
         } catch (SQLException throwables) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException e) {
-                    throwables.addSuppressed(e);
-                }
-            }
+            rollbackTransaction(throwables, connection);
             throw new RuntimeException(throwables);
+        } catch (Neo4jException e) {
+            rollbackTransaction(e, connection);
+            if ("Neo.ClientError.Schema.ConstraintValidationFailed".equals(e.code())) {
+                throw new DuplicateIdException("Duplicate message id " + message.getId());
+            } else {
+                throw e;
+            }
         } finally {
             if (connection != null) {
                 try {
@@ -89,6 +92,16 @@ public class Neo4jMessageRepository implements IMessageRepository {
         }
 
         return message;
+    }
+
+    private void rollbackTransaction(Throwable throwables, Connection connection) {
+        if (connection != null) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throwables.addSuppressed(e);
+            }
+        }
     }
 
     @Override
