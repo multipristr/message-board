@@ -63,8 +63,16 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, replying
     const [modifiedTimestamp, setModifiedTimeStamp] = useState(lastModifiedAt)
 
     useEffect(() => {
-        if (isModifying) {
-            areaRef.current.focus();
+        if (isModifying && areaRef.current) {
+            const el = areaRef.current;
+            el.focus();
+
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
         }
     }, [isModifying]);
 
@@ -75,10 +83,12 @@ const Message = ({id, author, createdAt, lastModifiedAt, content, show, replying
             <div style={modifiersStyle}>
                 <button onClick={() => {
                     if (isModifying) {
-                        if (contentRef.current === originalContent) {
+                        const content = areaRef.current.textContent.trim()
+                        contentRef.current = content
+                        if (content === originalContent) {
                             setModifying(false)
-                        } else {
-                            modifyMessage(id, contentRef.current)
+                        } else if (content.length && content.length <= 2_000) {
+                            modifyMessage(id, content)
                                 .then(response => response.json())
                                 .then(message => {
                                     setModifiedTimeStamp(message.lastModifiedAt)

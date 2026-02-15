@@ -52,7 +52,7 @@ public class SpringConfiguration {
         return new OpenAPI()
                 .info(new Info()
                         .title("Message board API")
-                        .version("1.2")
+                        .version("1.3")
                 )
                 .components(new Components()
                         .addSecuritySchemes(

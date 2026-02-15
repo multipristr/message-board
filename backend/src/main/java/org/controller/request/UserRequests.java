@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 
-public class UserRequests {
+public final class UserRequests {
 
     private UserRequests() throws IllegalAccessException {
         throw new IllegalAccessException("Single instance protection");
@@ -15,9 +15,9 @@ public class UserRequests {
 
         private static final long serialVersionUID = -883717680259485427L;
 
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 63, requiredMode = Schema.RequiredMode.REQUIRED)
         private String login;
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 63, requiredMode = Schema.RequiredMode.REQUIRED)
         private String password;
 
         public String getLogin() {
@@ -40,7 +40,8 @@ public class UserRequests {
 
         @JsonIgnore
         public boolean isInvalid() {
-            return login == null || login.trim().isEmpty() || password == null || password.trim().isEmpty();
+            return login == null || login.trim().isEmpty() || login.length() > 63
+                    || password == null || password.trim().isEmpty() || password.length() > 63;
         }
 
     }
@@ -49,9 +50,9 @@ public class UserRequests {
 
         private static final long serialVersionUID = 5026084312603177814L;
 
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 63, requiredMode = Schema.RequiredMode.REQUIRED)
         private String login;
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 63, requiredMode = Schema.RequiredMode.REQUIRED)
         private String password;
 
         public String getLogin() {
@@ -74,7 +75,8 @@ public class UserRequests {
 
         @JsonIgnore
         public boolean isInvalid() {
-            return login == null || login.trim().isEmpty() || password == null || password.trim().isEmpty();
+            return login == null || login.trim().isEmpty() || login.length() > 63
+                    || password == null || password.trim().isEmpty() || password.length() > 63;
         }
 
     }

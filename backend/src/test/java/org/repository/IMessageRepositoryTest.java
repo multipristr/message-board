@@ -1,6 +1,7 @@
 package org.repository;
 
 import org.exception.DuplicateIdException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.model.Message;
@@ -11,10 +12,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 abstract class IMessageRepositoryTest {
-    private final static UUID ID1 = UUID.randomUUID();
-    private final static UUID ID2 = UUID.randomUUID();
+    private static final UUID ID1 = UUID.randomUUID();
+    private static final UUID ID2 = UUID.randomUUID();
+    private static final UUID ID3 = UUID.randomUUID();
 
     abstract IMessageRepository getRepository();
+
+    @AfterEach
+    void tearDown() {
+        IMessageRepository repository = getRepository();
+        repository.deleteMessage(ID1);
+        repository.deleteMessage(ID2);
+        repository.deleteMessage(ID3);
+    }
 
     @Test
     void save() {
@@ -26,6 +36,8 @@ abstract class IMessageRepositoryTest {
         Message savedMessage = optionalMessage.get();
         Assertions.assertEquals(ID1, savedMessage.getId());
         Assertions.assertEquals("content", savedMessage.getContent());
+        Assertions.assertNotNull(savedMessage.getCreatedAt());
+        Assertions.assertNotNull(savedMessage.getLastModifiedAt());
     }
 
     @Test
@@ -62,15 +74,15 @@ abstract class IMessageRepositoryTest {
     @Test
     void selectTopLevel() {
         Instant time = Instant.now();
-        Message message = new Message().setId(ID1).setContent("content").setCreatedAt(time);
+        Message message = new Message().setId(ID1).setContent("content").setCreatedAt(time.plusMillis(3));
         IMessageRepository repository = getRepository();
         repository.saveMessage(message);
-        Message message2 = new Message().setId(ID2).setContent("content2").setCreatedAt(time.plusMillis(3));
+        Message message2 = new Message().setId(ID2).setContent("content2").setCreatedAt(time);
         repository.saveMessage(message2);
         List<Message> messages = repository.selectTopLevelMessages();
         Assertions.assertEquals(2, messages.size());
-        Assertions.assertEquals(ID1, messages.get(1).getId());
-        Assertions.assertEquals(ID2, messages.get(0).getId());
+        Assertions.assertEquals(ID1, messages.get(0).getId());
+        Assertions.assertEquals(ID2, messages.get(1).getId());
     }
 
     @Test
@@ -78,11 +90,15 @@ abstract class IMessageRepositoryTest {
         Message message = new Message().setId(ID1).setContent("content");
         IMessageRepository repository = getRepository();
         repository.saveMessage(message);
-        Message message2 = new Message().setId(ID2).setContent("content2").setParentId(message.getId());
+        Instant time = Instant.now();
+        Message message2 = new Message().setId(ID2).setContent("content2").setParentId(message.getId()).setCreatedAt(time);
         repository.saveMessage(message2);
+        Message message3 = new Message().setId(ID3).setContent("content3").setParentId(message.getId()).setCreatedAt(time.plusMillis(3));
+        repository.saveMessage(message3);
         List<Message> messages = repository.selectChildMessages(message.getId());
-        Assertions.assertEquals(1, messages.size());
+        Assertions.assertEquals(2, messages.size());
         Assertions.assertEquals(ID2, messages.get(0).getId());
+        Assertions.assertEquals(ID3, messages.get(1).getId());
     }
 
 }

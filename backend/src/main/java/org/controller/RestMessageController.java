@@ -6,9 +6,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.controller.request.MessageRequests;
 import org.controller.response.MessageResponses;
 import org.service.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,25 +29,27 @@ public class RestMessageController {
 
     private final MessageService service;
 
-    @Autowired
     public RestMessageController(MessageService service) {
         this.service = service;
     }
 
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successfully created message"),
-            @ApiResponse(responseCode = "400", description = "Empty message content"),
+            @ApiResponse(responseCode = "400", description = "Invalid message content"),
             @ApiResponse(responseCode = "401", description = "Not logged in"),
     })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createMessage(@RequestBody MessageRequests.Create messageDto) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageResponses.Message> createMessage(@RequestBody MessageRequests.Create messageDto) {
         MessageResponses.Message message = service.createMessage(messageDto);
-        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.LOCATION, message.getId().toString()).build();
+        ServletUriComponentsBuilder uri = ServletUriComponentsBuilder.fromCurrentRequest();
+        UriComponents location = messageDto.getParentId() == null ? uri.build() :
+                uri.path("/{parentId}/children").buildAndExpand(messageDto.getParentId());
+        return ResponseEntity.created(location.toUri()).body(message);
     }
 
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully modified message, attached updated modified timestamp"),
-            @ApiResponse(responseCode = "400", description = "Empty message content"),
+            @ApiResponse(responseCode = "400", description = "Invalid message content"),
             @ApiResponse(responseCode = "401", description = "Not logged in"),
             @ApiResponse(responseCode = "403", description = "Action not permitted for the user"),
             @ApiResponse(responseCode = "404", description = "No Message with the provided ID"),
@@ -65,9 +66,9 @@ public class RestMessageController {
             @ApiResponse(responseCode = "404", description = "No Message with the provided ID"),
     })
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> deleteMessage(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteMessage(@PathVariable UUID id) {
         service.deleteMessage(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @ApiResponses({

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class MessageRequests {
+public final class MessageRequests {
 
     private MessageRequests() throws IllegalAccessException {
         throw new IllegalAccessException("Single instance protection");
@@ -16,7 +16,7 @@ public class MessageRequests {
 
         private static final long serialVersionUID = 5465210130498384045L;
 
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 2_000, requiredMode = Schema.RequiredMode.REQUIRED)
         private String content;
         private UUID parentId;
 
@@ -40,7 +40,7 @@ public class MessageRequests {
 
         @JsonIgnore
         public boolean isInvalid() {
-            return content == null || content.trim().isEmpty();
+            return content == null || content.trim().isEmpty() || content.length() > 2_000;
         }
 
     }
@@ -49,7 +49,7 @@ public class MessageRequests {
 
         private static final long serialVersionUID = 3037744518044780414L;
 
-        @Schema(minLength = 1, requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(minLength = 1, maxLength = 2_000, requiredMode = Schema.RequiredMode.REQUIRED)
         private String content;
 
         public String getContent() {
@@ -63,7 +63,7 @@ public class MessageRequests {
 
         @JsonIgnore
         public boolean isInvalid() {
-            return content == null || content.trim().isEmpty();
+            return content == null || content.trim().isEmpty() || content.length() > 2_000;
         }
 
     }

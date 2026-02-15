@@ -44,9 +44,9 @@ class RestMessageControllerTest {
     private MessageService service;
 
     private String createToken() {
-        IUserRepository repository = Mockito.mock();
+        IUserRepository repository = Mockito.mock(IUserRepository.class);
         Mockito.when(repository.selectOneUser(Mockito.any())).thenReturn(Optional.of(new User()));
-        PasswordEncoder encoder = Mockito.mock();
+        PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
         Mockito.when(encoder.matches(Mockito.any(), Mockito.any())).thenReturn(true);
         UserRequests.Login request = new UserRequests.Login().setLogin("login").setPassword("password");
         return new UserService(encoder, repository).loginUser(request).getToken();
@@ -54,11 +54,12 @@ class RestMessageControllerTest {
 
     @Test
     void createMessage() throws Exception {
-        MessageRequests.Create request = new MessageRequests.Create().setContent("content");
+        MessageRequests.Create request = new MessageRequests.Create().setContent("content").setParentId(UUID.randomUUID());
         MessageResponses.Message response = new MessageResponses.Message()
                 .setCreatedAt(Instant.now())
                 .setAuthor("author")
                 .setId(UUID.randomUUID())
+                .setLastModifiedAt(Instant.now())
                 .setContent(request.getContent());
         Mockito.when(service.createMessage(Mockito.any())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/messages")
@@ -68,7 +69,9 @@ class RestMessageControllerTest {
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().exists("Location"))
-                .andExpect(MockMvcResultMatchers.header().string("Location", Matchers.not(Matchers.blankOrNullString())));
+                .andExpect(MockMvcResultMatchers.header().string("Location", Matchers.not(Matchers.blankOrNullString())))
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(response)));
     }
 
     @Test

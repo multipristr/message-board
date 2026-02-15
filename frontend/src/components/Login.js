@@ -125,10 +125,12 @@ const Login = ({afterLogin}) => {
     return (
         <form style={formStyle} method="post" onSubmit={logIn}>
             <label style={usernameLabelStyle} htmlFor="username">Username:</label>
-            <input style={usernameStyle} type="text" name="login" id="username" required={true}/>
+            <input style={usernameStyle} type="text" name="login" id="username" required={true} autoFocus={true}
+                   minLength={1} maxLength={63}/>
 
             <label style={passwordLabelStyle} htmlFor="password">Password:</label>
-            <input style={passwordStyle} type="password" name="password" id="password" required={true}/>
+            <input style={passwordStyle} type="password" name="password" id="password" required={true} minLength={1}
+                   maxLength={63}/>
 
             <input style={loginStyle} type="submit" data-inline="true" value="Log In" onClick={logIn}/>
             <input style={registerStyle} type="submit" data-inline="true" value="Register" onClick={register}/>

@@ -7,7 +7,6 @@ import org.exception.InvalidRequestBodyException;
 import org.model.User;
 import org.repository.IUserRepository;
 import org.security.JWTAuthorizationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final IUserRepository repository;
 
-    @Autowired
     public UserService(PasswordEncoder encoder, IUserRepository repository) {
         this.encoder = encoder;
         this.repository = repository;
