@@ -68,8 +68,7 @@ class RestMessageControllerTest {
                         .header("Authorization", createToken())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.header().exists("Location"))
-                .andExpect(MockMvcResultMatchers.header().string("Location", Matchers.not(Matchers.blankOrNullString())))
+                .andExpect(MockMvcResultMatchers.header().string("Location", Matchers.endsWith("/messages/" + request.getParentId() + "/children")))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(response)));
     }
@@ -157,7 +156,7 @@ class RestMessageControllerTest {
     @Test
     void deleteMessageNonExistent() throws Exception {
         UUID id = UUID.randomUUID();
-        Mockito.doThrow(MissingEntityException.class).when(service).deleteMessage(Mockito.eq(id));
+        Mockito.doThrow(MissingEntityException.class).when(service).deleteMessage(id);
         mockMvc.perform(MockMvcRequestBuilders.delete("/messages/{id}", id)
                         .header("Authorization", createToken())
                 )
@@ -167,7 +166,7 @@ class RestMessageControllerTest {
     @Test
     void deleteMessageDifferentUser() throws Exception {
         UUID id = UUID.randomUUID();
-        Mockito.doThrow(ActionNotPermittedException.class).when(service).deleteMessage(Mockito.eq(id));
+        Mockito.doThrow(ActionNotPermittedException.class).when(service).deleteMessage(id);
         mockMvc.perform(MockMvcRequestBuilders.delete("/messages/{id}", id)
                         .header("Authorization", createToken())
                 )
