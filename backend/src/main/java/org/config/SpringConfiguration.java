@@ -55,7 +55,7 @@ public class SpringConfiguration {
         return new OpenAPI()
                 .info(new Info()
                         .title("Message board API")
-                        .version("1.3")
+                        .version("1.3.1")
                         .contact(new Contact().name("https://multipristr.github.io/message-board/")
                                 .url("https://multipristr.github.io/message-board/"))
                 )
