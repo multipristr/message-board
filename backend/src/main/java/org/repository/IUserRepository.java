@@ -10,4 +10,8 @@ public interface IUserRepository {
 
     Optional<User> selectOneUser(String login);
 
+    default void deleteAll() {
+        /* only for test repositories */
+    }
+
 }
