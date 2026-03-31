@@ -5,22 +5,25 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.repository.IMessageRepository;
 import org.repository.IUserRepository;
+import org.repository.InMemoryMessageRepository;
 import org.repository.InMemoryUserRepository;
-import org.repository.Neo4jMessageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableScheduling
 public class SpringConfiguration {
 
     @Bean
@@ -37,8 +40,8 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public IMessageRepository messageRepository(DataSource neo4j) {
-        return new Neo4jMessageRepository(neo4j);
+    public IMessageRepository messageRepository() {
+        return new InMemoryMessageRepository();
     }
 
     @Bean
@@ -53,6 +56,8 @@ public class SpringConfiguration {
                 .info(new Info()
                         .title("Message board API")
                         .version("1.3.1")
+                        .contact(new Contact().name("https://multipristr.github.io/message-board/")
+                                .url("https://multipristr.github.io/message-board/"))
                 )
                 .components(new Components()
                         .addSecuritySchemes(

@@ -69,4 +69,9 @@ public class InMemoryMessageRepository implements IMessageRepository {
                 .sorted(Comparator.comparing(Message::getCreatedAt))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAll() {
+        database.clear();
+    }
 }

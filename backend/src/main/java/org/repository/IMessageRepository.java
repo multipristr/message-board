@@ -22,4 +22,8 @@ public interface IMessageRepository {
 
     List<Message> selectChildMessages(UUID parentId);
 
+    default void deleteAll() {
+        /* only for test repositories */
+    }
+
 }
