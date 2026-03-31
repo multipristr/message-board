@@ -1,2 +1,1 @@
 rootProject.name = "message-board"
-

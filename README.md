@@ -2,7 +2,8 @@
 
 ![build](https://github.com/multipristr/message-board/actions/workflows/compose.yml/badge.svg)
 
-[https://multipristr.github.io/message-board/](https://multipristr.github.io/message-board/)
+UI: [https://multipristr.github.io/message-board/](https://multipristr.github.io/message-board/)  
+Swagger: [https://message-board-nnel.onrender.com/swagger-ui/index.html](https://message-board-nnel.onrender.com/swagger-ui/index.html)
 
 ## A RESTful API to serve as the backend for a public message board
 It should support the following features: 
@@ -42,4 +43,4 @@ You can change Neo4J repository to Java map backed repository by changing `@Bean
 ## Database choice
 I chose Neo4J because it can easily operate with message hierarchy.
 If I didn't introduce replies I would opt for an SQL database.
-With user login as foreign key in message table I could easily find user's messages and privileges would be more secure and flexible. 
+With user login as foreign key in message table I could easily find user's messages and privileges would be more secure and flexible.
