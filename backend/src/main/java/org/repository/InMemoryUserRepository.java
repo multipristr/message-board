@@ -24,4 +24,9 @@ public class InMemoryUserRepository implements IUserRepository {
         return Optional.ofNullable(database.get(login));
     }
 
+    @Override
+    public void deleteAll() {
+        database.clear();
+    }
+
 }
