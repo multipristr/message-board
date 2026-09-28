@@ -91,9 +91,9 @@ abstract class IMessageRepositoryTest {
         IMessageRepository repository = getRepository();
         repository.saveMessage(message);
         Instant time = Instant.now();
-        Message message2 = new Message().setId(ID2).setContent("content2").setParentId(message.getId()).setCreatedAt(time);
+        Message message2 = new Message().setId(ID2).setContent("content2").setParent(message).setCreatedAt(time);
         repository.saveMessage(message2);
-        Message message3 = new Message().setId(ID3).setContent("content3").setParentId(message.getId()).setCreatedAt(time.plusMillis(3));
+        Message message3 = new Message().setId(ID3).setContent("content3").setParent(message).setCreatedAt(time.plusMillis(3));
         repository.saveMessage(message3);
         List<Message> messages = repository.selectChildMessages(message.getId());
         Assertions.assertEquals(2, messages.size());

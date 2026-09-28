@@ -77,6 +77,13 @@ class MessageServiceTest {
     }
 
     @Test
+    void createMessageWrongParentId() {
+        Assertions.assertThrows(MissingEntityException.class, () -> messageService.createMessage(new MessageRequests.Create().setContent("content")
+                .setParentId(UUID.randomUUID())
+        ));
+    }
+
+    @Test
     void modifyMessageContent() {
         MessageResponses.Message message = messageService.createMessage(new MessageRequests.Create().setContent("content"));
 
