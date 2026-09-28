@@ -47,7 +47,9 @@ public class MessageService {
         if (messageDto.isInvalid()) {
             throw new InvalidRequestBodyException("Invalid message content");
         }
-        Message message = new Message().setContent(messageDto.getContent()).setParentId(messageDto.getParentId()).setAuthor(getCurrentUser());
+        Message parent = messageDto.getParentId() == null ? null : repository.selectOneMessage(messageDto.getParentId())
+                .orElseThrow(() -> new MissingEntityException("No parent message id " + messageDto.getParentId()));
+        Message message = new Message().setContent(messageDto.getContent()).setParent(parent).setAuthor(getCurrentUser());
 
         message = repository.saveMessage(message);
         return mapToResponse(message);

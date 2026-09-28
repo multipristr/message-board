@@ -86,6 +86,18 @@ class RestMessageControllerTest {
     }
 
     @Test
+    void createMessageWrongParentId() throws Exception {
+        MessageRequests.Create request = new MessageRequests.Create().setContent("content").setParentId(UUID.randomUUID());
+        Mockito.when(service.createMessage(Mockito.any())).thenThrow(MissingEntityException.class);
+        mockMvc.perform(MockMvcRequestBuilders.post("/messages")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", createToken())
+                )
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
     void modifyMessage() throws Exception {
         MessageRequests.Patch request = new MessageRequests.Patch().setContent("content");
         MessageResponses.Message response = new MessageResponses.Message()

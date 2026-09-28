@@ -37,6 +37,7 @@ public class RestMessageController {
             @ApiResponse(responseCode = "201", description = "Successfully created message"),
             @ApiResponse(responseCode = "400", description = "Invalid message content"),
             @ApiResponse(responseCode = "401", description = "Not logged in"),
+            @ApiResponse(responseCode = "404", description = "No parent message with the provided ID")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageResponses.Message> createMessage(@RequestBody MessageRequests.Create messageDto) {

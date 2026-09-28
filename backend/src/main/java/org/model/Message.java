@@ -9,7 +9,7 @@ public class Message implements Serializable {
     private static final long serialVersionUID = -5208261623943103835L;
 
     private UUID id;
-    private UUID parentId;
+    private Message parent;
     private Instant createdAt;
     private String author;
     private Instant lastModifiedAt;
@@ -25,11 +25,15 @@ public class Message implements Serializable {
     }
 
     public UUID getParentId() {
-        return parentId;
+        return parent != null ? parent.getId() : null;
     }
 
-    public Message setParentId(UUID parentId) {
-        this.parentId = parentId;
+    public Message getParent() {
+        return parent;
+    }
+
+    public Message setParent(Message parent) {
+        this.parent = parent;
         return this;
     }
 
